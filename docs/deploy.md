@@ -1,26 +1,45 @@
 # Deploying ManualIQ
 
-The repository includes a Render Blueprint (`render.yaml`) that provisions a Docker web service and
-a PostgreSQL database. It is prepared but not applied from this workspace.
+The repository includes a Render Blueprint (`render.yaml`) that provisions a Docker web service. The
+free-tier blueprint uses **ephemeral SQLite** so it can run without a second Render database. The
+PostgreSQL path is also supported and is validated in CI.
 
 ## Before deploying
 
 - A Render account connected to the GitHub repository.
 - The `main` branch pushed to `https://github.com/FerRobles616/manualiq`.
-- No secrets are committed. `DATABASE_URL` is injected by Render from the managed database.
+- No secrets are committed. The free blueprint needs no database credentials.
 
 ## Apply the Blueprint
 
 1. Open the Render dashboard.
 2. Choose **New → Blueprint**.
 3. Connect the `FerRobles616/manualiq` repository.
-4. Render reads `render.yaml` and shows the `manualiq-api` web service and `manualiq-db` database.
+4. Render reads `render.yaml` and shows the `manualiq-api` web service.
 5. Apply the Blueprint and wait for the Docker build and health check.
-6. Open the service URL. The `README` badge and repository links remain on GitHub.
+6. Open the service URL.
 
 The start command runs `alembic upgrade head` and, because `SEED_DEMO=true`, indexes the three demo
 manuals with `python -m scripts.seed_corpus` before starting Uvicorn. The seed is idempotent by content
-hash, so restarts do not create duplicate documents.
+hash for the lifetime of the SQLite file.
+
+## Why the free demo uses SQLite
+
+Render allows only **one active free PostgreSQL database per account**. FieldOps already uses that
+slot. The ManualIQ free blueprint therefore sets:
+
+```text
+DATABASE_URL=sqlite:///./manualiq.db
+```
+
+The database lives inside the container and is **ephemeral**. On a restart or redeploy, the seed
+recreates the three demo manuals automatically. Answers and citations keep working, but user-uploaded
+manuals and their original PDFs do not survive a restart.
+
+For a persistent demo, use a paid Render PostgreSQL instance or an external Postgres (Neon, Supabase,
+etc.) and set `DATABASE_URL` to its connection string. The app normalizes `postgres://` and
+`postgresql://` URLs to the `psycopg` driver. CI runs Alembic, seed, and the smoke evaluation against
+PostgreSQL on every push.
 
 ## Why the free tier uses the hash provider
 
@@ -50,27 +69,52 @@ Use a Render instance with at least 2 GB of RAM (or a hosted embedding API in a 
 1. Set `EMBEDDING_PROVIDER=model2vec` and `MIN_SIMILARITY=0.30` in the Render environment.
 2. **Re-index the corpus.** The content hash only deduplicates documents; it does not know that the
    embedding model changed. Existing chunks would still contain hash vectors.
-   - Easiest: create a fresh database, or delete all documents through the API and restart the
-     service with `SEED_DEMO=true`.
-   - A future migration should store the embedding model/provider version on each chunk and force a
+   - With ephemeral SQLite, the simplest path is a fresh deploy/restart followed by the seed.
+   - With persistent Postgres, delete all documents through the API and restart with
+     `SEED_DEMO=true`, or create a fresh database.
+   - A future migration should store the embedding provider/model version on each chunk and force a
      re-index when it changes.
 3. Confirm `/health`, then run a query that requires semantic matching, such as
    “Which cooling fluid does the CX-40 use?”
 
+## Troubleshooting
+
+### “Cannot have more than one active free tier database”
+
+The current `render.yaml` does **not** create a database. If you see this error, Render is still
+syncing an older commit. Pull the latest `main` and click **Sync** (or **Manual Sync**) on the
+Blueprint page. If a canceled `manualiq-api` service is left behind, delete it and sync again.
+
+### The web service starts but has no manuals
+
+Check the Render logs for the seed output. With SQLite and `SEED_DEMO=true`, it should print:
+
+```text
+hvac_cx40.pdf: ready · 3 pages · 3 chunks
+hydraulic_press_h200.pdf: ready · 3 pages · 3 chunks
+loto_procedure.pdf: ready · 2 pages · 2 chunks
+```
+
+If the seed failed, check the `DATABASE_URL` and the `/health` endpoint.
+
+### Cold start is slow
+
+Render free services spin down after inactivity. The first request after a cold start can take tens
+of seconds. The container migrates and seeds on every start.
+
 ## Operational notes
 
-- **Cold starts:** Render free services spin down after inactivity. The first request after a cold
-  start can take tens of seconds.
-- **Ephemeral uploads:** the original PDFs are stored under `data/uploads`, which is ephemeral on the
-  free plan. The extracted chunks and citations live in PostgreSQL, so questions keep working after a
-  restart, but a user-uploaded original PDF may need to be re-uploaded. The demo corpus is restored by
-  the seed. Use a persistent disk or object storage for production.
+- **Ephemeral SQLite:** the free demo resets its database when the container is recreated. The demo
+  corpus is restored by the seed; user uploads are not. Use Postgres for persistence.
+- **Ephemeral uploads:** original PDFs live under `data/uploads` and are also lost on restart. The
+  extracted chunks in a persistent Postgres database would survive, but the PDF download links would
+  need object storage or a persistent disk.
 - **Public uploads:** `POST /api/documents` is intentionally unauthenticated for the demo. Do not
   deploy this publicly with sensitive manuals. Add authentication and rate limiting before real use.
-- **Database:** the free PostgreSQL plan may have storage/time limits. For a long-lived demo, use a
-  paid database or another managed Postgres.
 - **Schema changes:** the start command runs Alembic on every container boot. Keep migrations
   backward-compatible and test them against PostgreSQL before deploying.
+- **pgvector:** not required for the current corpus. The JSON embeddings + in-process cosine scan is
+  the v0.1 design. Moving to pgvector/HNSW is a scaling milestone.
 
 ## Local production check
 

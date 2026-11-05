@@ -151,9 +151,11 @@ The Docker image includes the optional PostgreSQL driver. For a local PostgreSQL
 ## Deployment
 
 A Render Blueprint is included in [`render.yaml`](render.yaml), with step-by-step notes in
-[`docs/deploy.md`](docs/deploy.md). The free-tier blueprint uses the deterministic hash provider
-because the multilingual model needs about 2 GB of RAM. Run locally for semantic mode. Apply the
-Blueprint from the Render dashboard; no secrets belong in the repository.
+[`docs/deploy.md`](docs/deploy.md). The free-tier blueprint uses the deterministic hash provider and
+ephemeral SQLite: the multilingual model needs about 2 GB of RAM, and FieldOps already occupies the
+account's single free PostgreSQL slot. The PostgreSQL path is CI-tested; set `DATABASE_URL` to a paid
+or external Postgres for persistence. Run locally for semantic mode. Apply the Blueprint from the
+Render dashboard; no secrets belong in the repository.
 
 ## API
 
@@ -251,8 +253,8 @@ This is a portfolio v0.1, not a production document platform.
 - Ingestion is synchronous and text-PDF only. A background worker and OCR are next.
 - Vector scoring is an in-process scan; pgvector/HNSW is the production upgrade.
 - The public upload endpoint has no authentication or rate limiting; deploy it behind a demo gate.
-- A hosted demo with persistent Postgres is prepared via the Render Blueprint; applying it and
-  validating the public URL is the next deployment milestone.
+- The free Render blueprint uses ephemeral SQLite; a persistent PostgreSQL deployment is the
+  production path and is CI-tested.
 
 Planned next steps: pgvector + Postgres, background ingestion jobs, an optional cited LLM answer
 provider, OCR for scanned manuals, a 50+ question evaluation set, and a hosted demo.
