@@ -1,5 +1,7 @@
 # Deploying ManualIQ
 
+**Live demo:** <https://manualiq-api-addc.onrender.com>
+
 The repository includes a Render Blueprint (`render.yaml`) that provisions a Docker web service. The
 free-tier blueprint uses **ephemeral SQLite** so it can run without a second Render database. The
 PostgreSQL path is also supported and is validated in CI.

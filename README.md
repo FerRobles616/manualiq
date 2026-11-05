@@ -6,6 +6,10 @@
 
 **Grounded answers over technical manuals, with page-level citations and a refusal path.**
 
+> **Live demo:** [manualiq-api-addc.onrender.com](https://manualiq-api-addc.onrender.com)
+> (Render free tier: deterministic hash provider + ephemeral SQLite; the first request after a cold
+> start can take ~50 seconds. Run locally for the full multilingual embedding model.)
+
 ![ManualIQ interface](docs/screenshots/home.png)
 
 ManualIQ is a local-first retrieval-augmented generation (RAG) service for PDF manuals. Upload a
@@ -150,6 +154,8 @@ The Docker image includes the optional PostgreSQL driver. For a local PostgreSQL
 
 ## Deployment
 
+**Live demo:** <https://manualiq-api-addc.onrender.com>
+
 A Render Blueprint is included in [`render.yaml`](render.yaml), with step-by-step notes in
 [`docs/deploy.md`](docs/deploy.md). The free-tier blueprint uses the deterministic hash provider and
 ephemeral SQLite: the multilingual model needs about 2 GB of RAM, and FieldOps already occupies the
@@ -257,7 +263,8 @@ This is a portfolio v0.1, not a production document platform.
   production path and is CI-tested.
 
 Planned next steps: pgvector + Postgres, background ingestion jobs, an optional cited LLM answer
-provider, OCR for scanned manuals, a 50+ question evaluation set, and a hosted demo.
+provider, OCR for scanned manuals, a 50+ question evaluation set, and a persistent PostgreSQL
+deployment.
 
 ## Stack
 
