@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}ManualIQ{% endblock %}</title>
+  <link rel="stylesheet" href="/static/app.css">
+  <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">
+      <span class="brand-mark">MQ</span>
+      <span>ManualIQ</span>
+    </a>
+    <nav class="topnav">
+      <a href="/docs" target="_blank" rel="noopener">API docs</a>
+      <a href="https://github.com/FerRobles616/manualiq" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </header>
+
+  <main class="shell">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    Grounded answers over technical manuals. Every claim cites a page.
+  </footer>
+</body>
+</html>

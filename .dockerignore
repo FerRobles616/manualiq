@@ -1,0 +1,15 @@
+.git
+.github
+backend/.venv
+backend/*.db
+backend/*.sqlite3
+backend/data/uploads
+backend/.env
+backend/.pytest_cache
+backend/.ruff_cache
+backend/.mypy_cache
+backend/htmlcov
+backend/.coverage
+__pycache__
+*.pyc
+docs/screenshots

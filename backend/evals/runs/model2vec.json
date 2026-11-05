@@ -1,0 +1,279 @@
+{
+  "timestamp": "2026-11-05T02:38:02.838484+00:00",
+  "dataset": "evals/dataset.jsonl",
+  "top_k": 5,
+  "provider": "model2vec",
+  "model": "minishlab/potion-multilingual-128M",
+  "metrics": {
+    "hit_at_k": 1.0,
+    "mrr": 0.9047619047619048,
+    "citation_accuracy": 1.0,
+    "refusal_accuracy": 1.0,
+    "answer_rate": 1.0,
+    "citation_support": 1.0,
+    "answered": 21,
+    "cases": 26
+  },
+  "results": [
+    {
+      "id": "q01",
+      "question": "What is the maximum operating pressure of the H-200?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 The maximum operating pressure is 180 bar. [1]"
+    },
+    {
+      "id": "q02",
+      "question": "What pressure should the H-200 never exceed?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 The H-200 hydraulic press is designed for cold metal forming. [1]"
+    },
+    {
+      "id": "q03",
+      "question": "Which hydraulic oil does the press use?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 The H-200 hydraulic press is designed for cold metal forming. [1]"
+    },
+    {
+      "id": "q04",
+      "question": "How often should the hydraulic oil be changed?",
+      "answerable": true,
+      "gold_rank": 2,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Change the hydraulic oil every 500 operating hours. [1]"
+    },
+    {
+      "id": "q05",
+      "question": "When should the oil filter be replaced?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Replace the oil filter every 250 operating hours. [1]"
+    },
+    {
+      "id": "q06",
+      "question": "How frequently should the hoses be inspected?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Inspect hoses and fittings every 100 operating hours. [1]"
+    },
+    {
+      "id": "q07",
+      "question": "What should I check if the pressure drops below 120 bar?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 If pressure drops below 120 bar, inspect the pressure relief valve first. [1]"
+    },
+    {
+      "id": "q08",
+      "question": "What causes an abnormal knocking noise?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 An abnormal knocking noise usually indicates air in the hydraulic oil; bleed the system. [1]"
+    },
+    {
+      "id": "q09",
+      "question": "What torque do the press frame bolts require?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 The press frame bolts require 120 Nm of torque. [1]"
+    },
+    {
+      "id": "q10",
+      "question": "How long is the warranty on the press frame?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 The warranty period is 24 months for the frame and 12 months for hydraulic components. [1]"
+    },
+    {
+      "id": "q11",
+      "question": "Which refrigerant does the CX-40 use?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 The CX-40 rooftop unit uses R-410A refrigerant. [1]"
+    },
+    {
+      "id": "q12",
+      "question": "What is the factory refrigerant charge?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 The factory refrigerant charge is 2.4 kg. [1]"
+    },
+    {
+      "id": "q13",
+      "question": "What supply airflow does the CX-40 provide?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 The CX-40 rooftop unit uses R-410A refrigerant. [1]"
+    },
+    {
+      "id": "q14",
+      "question": "How often should the air filter be replaced?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Replace the air filter every 3 months. [1]"
+    },
+    {
+      "id": "q15",
+      "question": "What does error E1 mean?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 E1 means high-pressure lockout. [1]"
+    },
+    {
+      "id": "q16",
+      "question": "How do I reset the HVAC unit?",
+      "answerable": true,
+      "gold_rank": 2,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 To reset the unit, turn the thermostat off for 30 seconds, then back on. [1]"
+    },
+    {
+      "id": "q17",
+      "question": "At what voltage does the lockout procedure apply?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 This procedure applies to equipment energized at 50 volts or more. [1]"
+    },
+    {
+      "id": "q18",
+      "question": "Which personal protective equipment is required for lockout?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Required PPE: arc-rated face shield, voltage-rated gloves, safety glasses, and flame-resistant clothing. [1]"
+    },
+    {
+      "id": "q19",
+      "question": "Who may remove a lockout lock?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Try to start the equipment after lockout to verify isolation. [1]"
+    },
+    {
+      "id": "q20",
+      "question": "How often is the lockout procedure inspected?",
+      "answerable": true,
+      "gold_rank": 2,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Inspect the lockout procedure annually. [1]"
+    },
+    {
+      "id": "q21",
+      "question": "What must employees do before locking out equipment?",
+      "answerable": true,
+      "gold_rank": 2,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Steps: notify affected employees, shut down the equipment, isolate all energy sources, apply locks and tags, release stored energy, and verify zero energy. [1]"
+    },
+    {
+      "id": "q22",
+      "question": "What is the phone number for technical support?",
+      "answerable": false,
+      "gold_rank": null,
+      "refused": true,
+      "citation_match": false,
+      "citation_supported": true,
+      "answer": "I couldn't find enough evidence in the loaded manuals to answer that question."
+    },
+    {
+      "id": "q23",
+      "question": "Who won the 2024 World Cup?",
+      "answerable": false,
+      "gold_rank": null,
+      "refused": true,
+      "citation_match": false,
+      "citation_supported": true,
+      "answer": "I couldn't find enough evidence in the loaded manuals to answer that question."
+    },
+    {
+      "id": "q24",
+      "question": "What is the recommended daily water intake?",
+      "answerable": false,
+      "gold_rank": null,
+      "refused": true,
+      "citation_match": false,
+      "citation_supported": true,
+      "answer": "I couldn't find enough evidence in the loaded manuals to answer that question."
+    },
+    {
+      "id": "q25",
+      "question": "How do I reset my email password?",
+      "answerable": false,
+      "gold_rank": null,
+      "refused": true,
+      "citation_match": false,
+      "citation_supported": true,
+      "answer": "I couldn't find enough evidence in the loaded manuals to answer that question."
+    },
+    {
+      "id": "q26",
+      "question": "What is the capital of France?",
+      "answerable": false,
+      "gold_rank": null,
+      "refused": true,
+      "citation_match": false,
+      "citation_supported": true,
+      "answer": "I couldn't find enough evidence in the loaded manuals to answer that question."
+    }
+  ]
+}

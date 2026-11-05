@@ -1,0 +1,24 @@
+{% if error %}
+<div class="banner error">{{ error }}</div>
+{% endif %}
+
+{% if documents %}
+<ul class="document-list">
+  {% for document in documents %}
+  <li class="document-row">
+    <div class="document-info">
+      <p class="doc-title">{{ document.title }}</p>
+      <p class="doc-meta">
+        {{ document.page_count }} pages · {{ document.chunks|length }} chunks
+      </p>
+      <a class="doc-link" href="/api/documents/{{ document.id }}/file" target="_blank" rel="noopener">
+        Open PDF
+      </a>
+    </div>
+    <span class="status status-{{ document.status.value }}">{{ document.status.value }}</span>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p class="empty-state">No manuals yet. Upload a PDF to start.</p>
+{% endif %}

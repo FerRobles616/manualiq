@@ -1,0 +1,32 @@
+{% if result.refused %}
+<article class="answer-card refused">
+  <div class="answer-meta">
+    <span class="eyebrow">No evidence</span>
+    <span class="confidence">Refused</span>
+  </div>
+  <p class="answer-text">{{ result.answer }}</p>
+  <p class="answer-hint">Try a more specific question, or upload another manual.</p>
+</article>
+{% else %}
+<article class="answer-card">
+  <div class="answer-meta">
+    <span class="eyebrow">Grounded answer</span>
+    <span class="confidence">Confidence {{ (result.confidence * 100)|round(0)|int }}%</span>
+  </div>
+  <p class="answer-text">{{ result.answer }}</p>
+
+  <div class="citations">
+    <h3>Sources</h3>
+    {% for citation in result.citations %}
+    <a class="citation" href="/api/documents/{{ citation.document_id }}/file" target="_blank" rel="noopener">
+      <span class="citation-index">[{{ loop.index }}]</span>
+      <span class="citation-body">
+        <span class="citation-title">{{ citation.document_title }}</span>
+        <span class="citation-page">page {{ citation.page }}</span>
+        <span class="citation-quote">“{{ citation.quote }}”</span>
+      </span>
+    </a>
+    {% endfor %}
+  </div>
+</article>
+{% endif %}

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow">Retrieval-augmented answers</p>
+    <h1>Ask your manuals.<br>Get answers with receipts.</h1>
+    <p class="lede">
+      Upload technical PDFs. ManualIQ retrieves the relevant passages, answers
+      only from evidence, and shows the document and page it used.
+    </p>
+  </div>
+  <div class="hero-metrics">
+    <div><strong>Cited</strong><span>every answer</span></div>
+    <div><strong>Hybrid</strong><span>BM25 + embeddings</span></div>
+    <div><strong>Eval</strong><span>hit@5 + citations</span></div>
+  </div>
+</section>
+
+<section class="workspace">
+  <aside class="panel documents-panel">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Knowledge base</p>
+        <h2>Manuals</h2>
+      </div>
+      <span class="count">{{ documents|length }}</span>
+    </div>
+
+    <form class="upload-form"
+          hx-post="/documents"
+          hx-target="#documents"
+          hx-swap="innerHTML"
+          hx-encoding="multipart/form-data"
+          hx-indicator="#upload-indicator">
+      <label class="file-drop">
+        <input type="file" name="file" accept="application/pdf" required>
+        <span>Choose a PDF</span>
+        <small>PDF up to 25 MB</small>
+      </label>
+      <input class="text-input" type="text" name="title" placeholder="Optional title">
+      <button class="primary-button" type="submit">Upload &amp; index</button>
+      <span id="upload-indicator" class="htmx-indicator">Indexing PDF…</span>
+    </form>
+
+    <div id="documents">
+      {% include "_documents.html" %}
+    </div>
+  </aside>
+
+  <section class="panel chat-panel">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Evidence first</p>
+        <h2>Ask the manuals</h2>
+      </div>
+      <span class="hint">Refuses when evidence is missing</span>
+    </div>
+
+    <form class="query-form"
+          hx-post="/query"
+          hx-target="#answer"
+          hx-swap="innerHTML"
+          hx-indicator="#query-indicator">
+      <textarea name="question" rows="3" required minlength="2"
+                placeholder="e.g. What is the maximum operating pressure of the H-200?">{{ question }}</textarea>
+      <div class="query-actions">
+        <span id="query-indicator" class="htmx-indicator">Searching evidence…</span>
+        <button class="primary-button" type="submit">Ask ManualIQ</button>
+      </div>
+    </form>
+
+    <p class="example-query">
+      Try:
+      <a href="/?q=What%20is%20the%20maximum%20operating%20pressure%20of%20the%20H-200%3F">
+        What is the maximum operating pressure of the H-200?
+      </a>
+    </p>
+
+    <div id="answer" class="answer-box">
+      {% if result %}
+        {% include "_answer.html" %}
+      {% else %}
+        <div class="empty-answer">
+          <span class="empty-icon">⌘</span>
+          <p>Ask a question to see a grounded answer with document and page citations.</p>
+        </div>
+      {% endif %}
+    </div>
+  </section>
+</section>
+{% endblock %}
