@@ -92,3 +92,59 @@ jobs:
       - name: Container logs
         if: always()
         run: docker logs manualiq-ci
+
+  postgres:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: manualiq
+          POSTGRES_PASSWORD: manualiq
+          POSTGRES_DB: manualiq
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U manualiq"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+          cache: pip
+          cache-dependency-path: backend/pyproject.toml
+
+      - name: Install with PostgreSQL driver
+        run: pip install -e ".[dev,postgres]"
+
+      - name: Migrate and seed PostgreSQL
+        env:
+          DATABASE_URL: postgresql+psycopg://manualiq:manualiq@localhost:5432/manualiq
+          EMBEDDING_PROVIDER: hash
+          MIN_SIMILARITY: "0.12"
+        run: |
+          alembic upgrade head
+          python -m scripts.seed_corpus
+
+      - name: PostgreSQL smoke evaluation
+        env:
+          DATABASE_URL: postgresql+psycopg://manualiq:manualiq@localhost:5432/manualiq
+          EMBEDDING_PROVIDER: hash
+          MIN_SIMILARITY: "0.12"
+        run: |
+          python -m scripts.evaluate \
+            --dataset evals/smoke.jsonl \
+            --check \
+            --min-hit5 0.75 \
+            --min-mrr 0.60 \
+            --min-citation 0.70 \
+            --min-refusal 0.80
