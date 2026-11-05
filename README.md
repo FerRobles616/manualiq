@@ -47,6 +47,8 @@ Full evaluation with the multilingual static embedding model
 - The full report is in [`backend/evals/runs/model2vec.json`](backend/evals/runs/model2vec.json).
 - CI runs a smaller **smoke evaluation** with the deterministic lexical embedding provider, so CI
   never downloads the model and still exercises the whole pipeline.
+- CI also builds and runs the Docker image (seed + health + query) and validates Alembic, seed, and
+  the smoke evaluation against PostgreSQL.
 
 See [`docs/evals.md`](docs/evals.md) for the methodology and per-question details.
 
