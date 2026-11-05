@@ -17,7 +17,7 @@ COPY backend/alembic.ini ./
 COPY backend/scripts ./scripts
 COPY backend/data/corpus ./data/corpus
 
-RUN pip install . \
+RUN pip install ".[postgres]" \
     && chmod +x scripts/start.sh
 
 EXPOSE 8000

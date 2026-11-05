@@ -129,6 +129,9 @@ make eval-check    # fails if the full evaluation drops below thresholds
 make smoke         # deterministic hash-embedding CI smoke eval
 ```
 
+The Docker image includes the optional PostgreSQL driver. For a local PostgreSQL database, install
+`pip install -e ".[dev,postgres]"` and set `DATABASE_URL` (see `backend/.env.example`).
+
 ## API
 
 Swagger UI: <http://localhost:8000/docs>
