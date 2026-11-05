@@ -1,0 +1,18 @@
+{
+  "timestamp": "2026-11-05T02:49:43.296628+00:00",
+  "dataset": "evals/dataset.jsonl",
+  "provider": "model2vec",
+  "model": "minishlab/potion-multilingual-128M",
+  "runs": 5,
+  "queries_per_run": 21,
+  "total_queries": 105,
+  "latency_ms": {
+    "mean": 1.6970335333012154,
+    "p50": 1.6566440026508644,
+    "p95": 2.0483150001382455,
+    "max": 2.5399349979124963
+  },
+  "cost_usd_per_query": 0.0,
+  "platform": "Linux-7.2.11-200.nobara.fc44.x86_64-x86_64-with-glibc2.43",
+  "cpu_count": 16
+}

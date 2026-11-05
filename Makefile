@@ -1,6 +1,6 @@
 PYTHON ?= python3
 
-.PHONY: install migrate seed run test lint eval eval-check smoke clean
+.PHONY: install migrate seed run test lint eval eval-check bench smoke clean
 
 install:
 	cd backend && test -d .venv || $(PYTHON) -m venv .venv
@@ -29,6 +29,9 @@ eval:
 
 eval-check:
 	cd backend && .venv/bin/python -m scripts.evaluate --check
+
+bench:
+	cd backend && .venv/bin/python -m scripts.benchmark
 
 smoke:
 	rm -f backend/ci-eval.db

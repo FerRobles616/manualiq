@@ -53,3 +53,42 @@ jobs:
             --min-mrr 0.60 \
             --min-citation 0.70 \
             --min-refusal 0.80
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Build image
+        run: docker build -t manualiq:ci .
+
+      - name: Run container
+        run: |
+          docker run -d --name manualiq-ci -p 8000:8000 \
+            -e SEED_DEMO=true \
+            -e EMBEDDING_PROVIDER=hash \
+            -e MIN_SIMILARITY=0.12 \
+            manualiq:ci
+
+      - name: Wait for health
+        run: |
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8000/health; then
+              exit 0
+            fi
+            sleep 2
+          done
+          docker logs manualiq-ci
+          exit 1
+
+      - name: Query the container
+        run: |
+          curl -fsS http://127.0.0.1:8000/api/query \
+            -H 'Content-Type: application/json' \
+            -d '{"question":"What is the maximum operating pressure of the H-200?"}' \
+            | grep -q "180 bar"
+
+      - name: Container logs
+        if: always()
+        run: docker logs manualiq-ci

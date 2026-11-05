@@ -18,7 +18,7 @@
   <div class="citations">
     <h3>Sources</h3>
     {% for citation in result.citations %}
-    <a class="citation" href="/api/documents/{{ citation.document_id }}/file" target="_blank" rel="noopener">
+    <a class="citation" href="/api/documents/{{ citation.document_id }}/file#page={{ citation.page }}" target="_blank" rel="noopener">
       <span class="citation-index">[{{ loop.index }}]</span>
       <span class="citation-body">
         <span class="citation-title">{{ citation.document_title }}</span>

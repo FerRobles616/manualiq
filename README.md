@@ -22,6 +22,7 @@ Most RAG demos stop at "the model answered something." ManualIQ focuses on the p
 system useful in a technical setting:
 
 - **Citations with a page number** for every answer.
+- **Citation links** open the original PDF at the cited page.
 - **A refusal path** when the corpus has no evidence.
 - **Hybrid retrieval** instead of a single embedding lookup.
 - **A reproducible evaluation suite** with retrieval, citation, refusal, and support metrics.
@@ -48,6 +49,18 @@ Full evaluation with the multilingual static embedding model
   never downloads the model and still exercises the whole pipeline.
 
 See [`docs/evals.md`](docs/evals.md) for the methodology and per-question details.
+
+### Local performance
+
+Benchmark on the demo corpus with the multilingual model warmed up (21 questions × 5 runs, CPU):
+
+| p50 | p95 | Mean | Marginal cost |
+| ---: | ---: | ---: | ---: |
+| 1.7 ms | 2.0 ms | 1.7 ms | **$0.00 / query** |
+
+The measurement covers retrieval plus extractive answer selection. It excludes the one-time model
+load on a cold process. Run it yourself with `make bench`; the raw report is
+[`backend/evals/runs/benchmark.json`](backend/evals/runs/benchmark.json).
 
 ## How it works
 
@@ -126,6 +139,7 @@ make test          # 19 unit and API tests
 make lint          # ruff + mypy
 make eval          # full 26-question evaluation
 make eval-check    # fails if the full evaluation drops below thresholds
+make bench         # local retrieval + answer latency benchmark
 make smoke         # deterministic hash-embedding CI smoke eval
 ```
 
