@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: manualiq-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: manualiq-db
+          property: connectionString
+      - key: EMBEDDING_PROVIDER
+        value: hash
+      - key: EMBEDDING_DIM
+        value: "256"
+      - key: MIN_SIMILARITY
+        value: "0.12"
+      - key: MAX_UPLOAD_BYTES
+        value: "26214400"
+      - key: SEED_DEMO
+        value: "true"
+      - key: CORS_ORIGINS
+        value: "*"
+
+databases:
+  - name: manualiq-db
+    plan: free
+    databaseName: manualiq
+    user: manualiq

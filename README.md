@@ -83,8 +83,8 @@ flowchart LR
 
 ## Quickstart
 
-Requirements: Python 3.12+, a text-based PDF, and about 1 GB of disk for the local embedding model.
-No API key is needed.
+Requirements: Python 3.12+, a text-based PDF, about 1 GB of disk for the local embedding model, and
+roughly 2 GB of RAM while the multilingual model is loaded. No API key is needed.
 
 ```bash
 git clone https://github.com/FerRobles616/manualiq.git
@@ -122,7 +122,7 @@ uvicorn app.main:app --reload
 ### Tests and evals
 
 ```bash
-make test          # 18 unit and API tests
+make test          # 19 unit and API tests
 make lint          # ruff + mypy
 make eval          # full 26-question evaluation
 make eval-check    # fails if the full evaluation drops below thresholds
@@ -131,6 +131,13 @@ make smoke         # deterministic hash-embedding CI smoke eval
 
 The Docker image includes the optional PostgreSQL driver. For a local PostgreSQL database, install
 `pip install -e ".[dev,postgres]"` and set `DATABASE_URL` (see `backend/.env.example`).
+
+## Deployment
+
+A Render Blueprint is included in [`render.yaml`](render.yaml), with step-by-step notes in
+[`docs/deploy.md`](docs/deploy.md). The free-tier blueprint uses the deterministic hash provider
+because the multilingual model needs about 2 GB of RAM. Run locally for semantic mode. Apply the
+Blueprint from the Render dashboard; no secrets belong in the repository.
 
 ## API
 
@@ -195,7 +202,8 @@ backend/
   migrations/            Alembic migration
   scripts/               Corpus generation, seeding, evaluation, container start
   tests/                 Unit and API tests
-docs/                    Architecture, evaluation methodology, ADR, screenshots
+render.yaml              Render Blueprint: Docker web service + PostgreSQL
+docs/                    Architecture, evaluation, deployment, ADR, screenshots
 ```
 
 ## Design decisions
@@ -221,11 +229,14 @@ More context: [`docs/architecture.md`](docs/architecture.md) and
 This is a portfolio v0.1, not a production document platform.
 
 - The demo corpus is small (8 pages). The evaluation is designed to be honest, not exhaustive.
+- The multilingual model needs about 2 GB of RAM; the free-tier deployment uses the lexical hash
+  provider instead.
 - Answers are extractive and single-evidence; multi-hop and conversational answers are future work.
 - Ingestion is synchronous and text-PDF only. A background worker and OCR are next.
 - Vector scoring is an in-process scan; pgvector/HNSW is the production upgrade.
 - The public upload endpoint has no authentication or rate limiting; deploy it behind a demo gate.
-- A hosted demo with persistent Postgres is the next milestone.
+- A hosted demo with persistent Postgres is prepared via the Render Blueprint; applying it and
+  validating the public URL is the next deployment milestone.
 
 Planned next steps: pgvector + Postgres, background ingestion jobs, an optional cited LLM answer
 provider, OCR for scanned manuals, a 50+ question evaluation set, and a hosted demo.

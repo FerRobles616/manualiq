@@ -58,10 +58,6 @@ def ingest_pdf_bytes(
     upload_dir = upload_dir or settings.upload_dir
     content_hash = hashlib.sha256(data).hexdigest()
 
-    existing = db.scalar(select(Document).where(Document.content_hash == content_hash))
-    if existing is not None:
-        return existing
-
     if len(data) > settings.max_upload_bytes:
         raise IngestionError("The PDF exceeds the upload size limit")
     if not data.startswith(b"%PDF"):
@@ -72,6 +68,13 @@ def ingest_pdf_bytes(
     storage_path = storage_dir / f"{content_hash}.pdf"
     if not storage_path.exists():
         storage_path.write_bytes(data)
+
+    existing = db.scalar(select(Document).where(Document.content_hash == content_hash))
+    if existing is not None:
+        if not Path(existing.storage_path).exists():
+            existing.storage_path = str(storage_path)
+            db.commit()
+        return existing
 
     document = Document(
         title=title or Path(filename).stem,

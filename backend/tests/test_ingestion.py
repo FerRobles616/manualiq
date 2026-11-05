@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -52,6 +54,34 @@ def test_duplicate_upload_returns_the_existing_document(
     )
 
     assert first.id == second.id
+
+
+def test_duplicate_upload_restores_a_missing_stored_file(
+    db_session: Session,
+    provider: HashEmbeddingProvider,
+    tmp_path,
+    pdf_bytes: bytes,
+) -> None:
+    first = ingest_pdf_bytes(
+        db_session,
+        pdf_bytes,
+        filename="manual.pdf",
+        provider=provider,
+        upload_dir=str(tmp_path),
+    )
+    stored_path = Path(first.storage_path)
+    stored_path.unlink()
+
+    second = ingest_pdf_bytes(
+        db_session,
+        pdf_bytes,
+        filename="manual-copy.pdf",
+        provider=provider,
+        upload_dir=str(tmp_path),
+    )
+
+    assert second.id == first.id
+    assert Path(second.storage_path).exists()
 
 
 def test_rejects_non_pdf_bytes(
