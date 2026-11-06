@@ -11,7 +11,7 @@ from app.api.deps import DbSession, EmbeddingDep
 from app.core.config import get_settings
 from app.models.document import Document
 from app.schemas.document import DocumentRead
-from app.services.ingestion import IngestionError, ingest_pdf_bytes
+from app.services.ingestion import IngestionError, ingest_pdf_bytes, queue_pdf_bytes
 
 router = APIRouter(prefix="/api/documents", tags=["documents"])
 
@@ -34,6 +34,7 @@ def _read(document: Document) -> DocumentRead:
 async def upload_document(
     db: DbSession,
     provider: EmbeddingDep,
+    response: Response,
     file: Annotated[UploadFile, File()],
     title: Annotated[str | None, Form()] = None,
 ) -> DocumentRead:
@@ -61,13 +62,22 @@ async def upload_document(
         )
 
     try:
-        document = ingest_pdf_bytes(
-            db,
-            data,
-            filename=filename,
-            title=title.strip() if title and title.strip() else None,
-            provider=provider,
-        )
+        if settings.ingestion_mode == "queued":
+            document = queue_pdf_bytes(
+                db,
+                data,
+                filename=filename,
+                title=title.strip() if title and title.strip() else None,
+            )
+            response.status_code = status.HTTP_202_ACCEPTED
+        else:
+            document = ingest_pdf_bytes(
+                db,
+                data,
+                filename=filename,
+                title=title.strip() if title and title.strip() else None,
+                provider=provider,
+            )
     except IngestionError as error:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,

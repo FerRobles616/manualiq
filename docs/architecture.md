@@ -10,8 +10,8 @@ design optimizes for four things:
 3. **Local reproducibility** — no API key, GPU, or external vector database is required.
 4. **Measurable quality** — retrieval, citations, and refusal behavior are tested in CI.
 
-The current implementation is intentionally a single-process service. It is a portfolio v0.1, not a
-multi-tenant document platform.
+The current implementation is a single deployable API with an optional background worker. It is a
+portfolio v0.2, not a multi-tenant document platform.
 
 ## Components
 
@@ -19,7 +19,9 @@ multi-tenant document platform.
 flowchart TB
     subgraph Ingestion
         Upload[Upload PDF] --> StoreFile[(data/uploads)]
-        Upload --> Extract[PyMuPDF block extraction]
+        Upload --> Jobs[(ingestion_jobs)]
+        Jobs --> Worker[worker.py]
+        Worker --> Extract[PyMuPDF block extraction]
         Extract --> Chunker[Page-aware chunker]
         Chunker --> Embedder[Embedding provider]
         Embedder --> ChunkRows[(chunks.embedding JSON / pgvector)]
@@ -68,7 +70,14 @@ service and keeps the API usable on its own.
   HNSW cosine distance
 - `created_at`
 
+`ingestion_jobs`:
+
+- `id` (UUID), `document_id`, `status` (`queued` / `processing` / `ready` / `failed`)
+- `attempts`, `max_attempts`, `error`, `created_at`, `started_at`, `finished_at`
+
 The content hash makes uploads idempotent: uploading the same PDF twice returns the existing document.
+In synchronous mode the document is processed inline. In queued mode the upload creates a job and the
+worker claims it; the UI keeps polling the document list while work is pending.
 
 SQLite is the default for the local demo. On SQLite, vector search is an in-process NumPy scan over
 the JSON arrays. On PostgreSQL, the app uses the native pgvector column and an HNSW index; the
@@ -86,6 +95,13 @@ is exercised by CI with the `pgvector/pgvector` image.
 5. Embed all chunks in batches of 32. Store one row per chunk. On PostgreSQL, also write the native
    `embedding_vec` column used by the HNSW index.
 6. Mark the document `ready` with page count and chunk count, or `failed` with the error.
+
+In **sync** mode (the default), steps 2–6 happen inside the upload request. In **queued** mode, the
+upload commits the document and an `ingestion_jobs` row, and `app/worker.py` claims the job. The worker
+sets the job/document to `processing`, runs the same processing function, and marks both `ready`. On
+failure it requeues up to `max_attempts`, then marks both `failed`. PostgreSQL workers use
+`FOR UPDATE SKIP LOCKED`; SQLite uses a single-worker claim. The API returns `202 Accepted` in queued
+mode and the UI polls for status changes.
 
 The extraction step is layout-aware rather than a full document-layout model: it preserves paragraph
 and heading boundaries that PyMuPDF exposes, but it does not reconstruct tables, figures, or a
@@ -158,8 +174,10 @@ written to `evals/runs/` as JSON.
   PostgreSQL path uses pgvector/HNSW and is the scaling path; the free demo stays on SQLite.
 - **Extractive answers.** High faithfulness, limited fluency and no multi-sentence synthesis. An LLM
   can be added later only if it returns structured citations that pass the same support checks.
-- **Synchronous ingestion.** Small PDFs index in seconds; a queue/worker is needed for large uploads
-  and concurrency.
+- **Synchronous by default.** Small PDFs index in seconds; queued mode adds a durable worker, but the
+  demo remains synchronous to avoid running a second process on the free host.
+- **Worker supervision.** The worker has retry limits but no stale-`processing` recovery or dead-letter
+  queue yet; a production deployment should add heartbeats and metrics.
 - **No authentication or rate limiting.** The upload endpoint is a demo surface. A hosted deployment
   needs an admin token or login, size limits at the edge, and per-IP rate limiting.
 - **Text PDFs only.** Scanned PDFs need OCR before extraction.
@@ -167,7 +185,7 @@ written to `evals/runs/` as JSON.
 ## Scaling path
 
 1. Benchmark pgvector/HNSW against the SQLite scan on a larger corpus and tune HNSW parameters.
-2. Add a durable ingestion worker and a `jobs` table with claim semantics.
+2. Add worker heartbeats, stale-job recovery, and a dead-letter queue.
 3. Add section-aware chunking and document metadata (revision, equipment, language).
 4. Expand the gold set beyond 60 cases and add a human review pass.
 5. Add an optional LLM answer provider with a strict citation/refusal contract and the same eval gates.

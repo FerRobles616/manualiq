@@ -2,7 +2,7 @@
 
 - **Status:** Accepted
 - **Date:** 2026-11-04
-- **Context:** ManualIQ portfolio project, v0.1
+- **Context:** ManualIQ portfolio project, v0.2
 
 ## Context
 
@@ -82,6 +82,6 @@ single-evidence answers with a refusal guard**.
 
 1. Benchmark pgvector/HNSW against the SQLite scan on a larger corpus and tune index parameters.
 2. Replace page-level chunks with section-aware chunks plus page metadata.
-3. Add a durable ingestion worker.
+3. Add worker heartbeats, stale-job recovery, and a dead-letter queue.
 4. Add an optional LLM answer provider with a strict citation/refusal contract.
 5. Expand the gold set beyond 60 cases and add a human review pass.

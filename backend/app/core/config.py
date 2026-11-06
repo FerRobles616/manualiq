@@ -25,6 +25,9 @@ class Settings(BaseSettings):
     top_k: int = 5
     min_similarity: float = 0.30
     fts_language: Literal["english", "spanish", "simple"] = "english"
+    ingestion_mode: Literal["sync", "queued"] = "sync"
+    worker_poll_seconds: float = 2.0
+    worker_max_attempts: int = 3
 
     upload_dir: str = "./data/uploads"
     corpus_dir: str = "./data/corpus"

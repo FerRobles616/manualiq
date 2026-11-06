@@ -105,6 +105,27 @@ If the seed failed, check the `DATABASE_URL` and the `/health` endpoint.
 Render free services spin down after inactivity. The first request after a cold start can take tens
 of seconds. The container migrates and seeds on every start.
 
+## Background ingestion
+
+The free demo processes uploads synchronously. To use the durable queue, set:
+
+```text
+INGESTION_MODE=queued
+WORKER_MAX_ATTEMPTS=3
+```
+
+Then run the worker in the same environment as the API:
+
+```bash
+python -m app.worker        # continuous
+python -m app.worker --once # process at most one job
+```
+
+`scripts/start.sh` starts a background worker automatically when `INGESTION_MODE=queued`, before
+Uvicorn. For a production deployment, run the worker as a separate service so it can be scaled and
+monitored independently. The worker uses PostgreSQL `FOR UPDATE SKIP LOCKED` and requeues failed jobs
+up to the configured limit.
+
 ## Operational notes
 
 - **Ephemeral SQLite:** the free demo resets its database when the container is recreated. The demo

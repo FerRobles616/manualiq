@@ -43,7 +43,7 @@
       <span id="upload-indicator" class="htmx-indicator">Indexing PDF…</span>
     </form>
 
-    <div id="documents">
+    <div id="documents" hx-get="/documents" hx-trigger="every 3s" hx-swap="innerHTML">
       {% include "_documents.html" %}
     </div>
   </aside>

@@ -144,7 +144,7 @@ uvicorn app.main:app --reload
 ### Tests and evals
 
 ```bash
-make test          # 19 unit and API tests
+make test          # 22 unit and API tests
 make lint          # ruff + mypy
 make eval          # full 60-question evaluation
 make eval-check    # fails if the full evaluation drops below thresholds
@@ -155,6 +155,22 @@ make smoke         # deterministic hash-embedding CI smoke eval
 The Docker image includes the optional PostgreSQL driver. For a local PostgreSQL database, install
 `pip install -e ".[dev,postgres]"`, use a pgvector-enabled PostgreSQL instance, and set `DATABASE_URL`
 (see `backend/.env.example`). SQLite remains the zero-dependency local demo.
+
+### Background ingestion
+
+Uploads are synchronous by default so the demo works without extra processes. For a durable queue:
+
+```bash
+cd backend
+export INGESTION_MODE=queued
+python -m app.worker        # continuous worker
+# or: python -m app.worker --once
+```
+
+The upload endpoint returns `202` with a `queued` document, and the UI polls the manual list while the
+worker extracts, chunks, and embeds the PDF. Jobs live in `ingestion_jobs`; PostgreSQL workers claim
+with `FOR UPDATE SKIP LOCKED`, and failed jobs retry up to `WORKER_MAX_ATTEMPTS`. The Docker start
+script launches a background worker automatically when `INGESTION_MODE=queued`.
 
 ## Deployment
 
@@ -216,20 +232,21 @@ backend/
     api/routes/          FastAPI JSON and HTML/HTMX routes
     core/                Settings and environment configuration
     db/                  SQLAlchemy engine and session
-    models/              Document and Chunk models
+    models/              Document, Chunk, and IngestionJob models
     schemas/             Pydantic request/response models
     services/
-      ingestion.py       PDF extraction, page-aware chunking, embedding
+      ingestion.py       PDF extraction, page-aware chunking, sync/queued ingestion
       embeddings.py      model2vec + deterministic hash provider
-      retrieval.py       BM25 + vector search + adaptive weighted RRF
+      retrieval.py       BM25/FTS + cosine/pgvector + adaptive weighted RRF
       answering.py       Sentence selection, citations, refusal guard
       text.py            Tokenization, sentence splitting, chunking
+    worker.py            Durable ingestion worker (SKIP LOCKED, retries)
     templates/           Jinja/HTMX UI
-  data/corpus/           Three synthetic demo manuals
+  data/corpus/           Six synthetic demo manuals
   evals/                 Full and smoke datasets + evaluation reports
-  migrations/            Alembic migration
+  migrations/            Alembic migrations (documents, pgvector, jobs)
   scripts/               Corpus generation, seeding, evaluation, container start
-  tests/                 Unit and API tests
+  tests/                 Unit, API, and worker tests
 render.yaml              Render Blueprint: Docker web service + PostgreSQL
 docs/                    Architecture, evaluation, deployment, ADR, screenshots
 ```
@@ -247,6 +264,8 @@ docs/                    Architecture, evaluation, deployment, ADR, screenshots
   cosine scan. The production path uses PostgreSQL with a `vector(256)` column and an HNSW cosine
   index via pgvector; the migration, seed, and retrieval path are validated in CI. The free Render
   demo stays on SQLite because pgvector needs a PostgreSQL deployment.
+- **Durable queue optional.** Uploads are synchronous by default. `INGESTION_MODE=queued` plus the
+  worker uses an `ingestion_jobs` table, PostgreSQL `SKIP LOCKED`, retries, and UI polling.
 - **Evaluation as a product feature.** Thresholds in CI prevent silent retrieval regressions. The
   smoke set and the full model evaluation are deliberately separate.
 
@@ -255,7 +274,7 @@ More context: [`docs/architecture.md`](docs/architecture.md) and
 
 ## Limitations and roadmap
 
-This is a portfolio v0.1, not a production document platform.
+This is a portfolio v0.2, not a production document platform.
 
 - The demo corpus is small (17 pages). The evaluation is designed to be honest, not exhaustive.
 - The multilingual model needs about 2 GB of RAM; the free-tier deployment uses the lexical hash
@@ -263,13 +282,14 @@ This is a portfolio v0.1, not a production document platform.
 - Answers are extractive and single-evidence; multi-hop and conversational answers are future work.
 - The hosted demo uses SQLite and an in-process scan; the PostgreSQL + pgvector/HNSW path is
   implemented and CI-tested, but requires a pgvector-enabled PostgreSQL instance.
-- Ingestion is synchronous and text-PDF only. A background worker and OCR are next.
+- Ingestion is synchronous by default; set `INGESTION_MODE=queued` and run the worker for background
+  processing. OCR for scanned PDFs is still future work.
 - The public upload endpoint has no authentication or rate limiting; deploy it behind a demo gate.
 - The free Render blueprint uses ephemeral SQLite; a persistent PostgreSQL deployment is the
   production path and is CI-tested.
 
-Planned next steps: background ingestion jobs, an optional cited LLM answer provider, OCR for scanned
-manuals, a larger 100-question evaluation set, and a persistent pgvector deployment.
+Planned next steps: an optional cited LLM answer provider, OCR for scanned manuals, a larger
+100-question evaluation set, and a persistent pgvector deployment.
 
 ## Stack
 

@@ -9,7 +9,7 @@ from app.api.deps import DbSession, EmbeddingDep
 from app.core.config import get_settings
 from app.models.document import Document
 from app.services.answering import ExtractiveAnswerService
-from app.services.ingestion import IngestionError, ingest_pdf_bytes
+from app.services.ingestion import IngestionError, ingest_pdf_bytes, queue_pdf_bytes
 from app.services.retrieval import RetrievalService
 from app.web.templates import templates
 
@@ -58,6 +58,15 @@ def index(
     )
 
 
+@router.get("/documents", response_class=HTMLResponse)
+def documents_partial(request: Request, db: DbSession) -> HTMLResponse:
+    return templates.TemplateResponse(
+        request=request,
+        name="_documents.html",
+        context={"documents": _documents(db)},
+    )
+
+
 @router.post("/documents", response_class=HTMLResponse)
 async def upload_document(
     request: Request,
@@ -77,13 +86,21 @@ async def upload_document(
         error = "The uploaded file is empty."
     else:
         try:
-            ingest_pdf_bytes(
-                db,
-                data,
-                filename=filename,
-                title=title.strip() if title and title.strip() else None,
-                provider=provider,
-            )
+            if settings.ingestion_mode == "queued":
+                queue_pdf_bytes(
+                    db,
+                    data,
+                    filename=filename,
+                    title=title.strip() if title and title.strip() else None,
+                )
+            else:
+                ingest_pdf_bytes(
+                    db,
+                    data,
+                    filename=filename,
+                    title=title.strip() if title and title.strip() else None,
+                    provider=provider,
+                )
         except IngestionError as exc:
             error = str(exc)
 

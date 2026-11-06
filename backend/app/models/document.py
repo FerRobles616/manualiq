@@ -16,6 +16,13 @@ class DocumentStatus(StrEnum):
     FAILED = "failed"
 
 
+class IngestionJobStatus(StrEnum):
+    QUEUED = "queued"
+    PROCESSING = "processing"
+    READY = "ready"
+    FAILED = "failed"
+
+
 class Document(Base):
     __tablename__ = "documents"
 
@@ -58,6 +65,53 @@ class Document(Base):
         back_populates="document",
         cascade="all, delete-orphan",
         lazy="select",
+    )
+    jobs: Mapped[list["IngestionJob"]] = relationship(
+        back_populates="document",
+        cascade="all, delete-orphan",
+        lazy="select",
+    )
+
+
+class IngestionJob(Base):
+    __tablename__ = "ingestion_jobs"
+
+    id: Mapped[uuid.UUID] = mapped_column(
+        Uuid,
+        primary_key=True,
+        default=uuid.uuid4,
+    )
+    document_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("documents.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
+    )
+    status: Mapped[IngestionJobStatus] = mapped_column(
+        SAEnum(
+            IngestionJobStatus,
+            name="ingestion_job_status",
+            native_enum=False,
+            length=20,
+            values_callable=lambda enum_cls: [member.value for member in enum_cls],
+        ),
+        default=IngestionJobStatus.QUEUED,
+        nullable=False,
+        index=True,
+    )
+    attempts: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    max_attempts: Mapped[int] = mapped_column(Integer, default=3, nullable=False)
+    error: Mapped[str | None] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(UTC),
+        nullable=False,
+    )
+    started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+
+    document: Mapped["Document"] = relationship(
+        back_populates="jobs",
+        lazy="selectin",
     )
 
 

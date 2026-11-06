@@ -132,7 +132,7 @@ dataset, while still catching meaningful regressions.
 - The dataset is a 60-case synthetic portfolio baseline, not a production benchmark. It covers six
   manuals but still uses page-level labels and a controlled corpus.
 - Gold labels are page-level; a chunk may contain several facts on the same page.
-- Answers are extractive and single-evidence; multi-hop questions are out of scope for v0.1.
+- Answers are extractive and single-evidence; multi-hop questions are out of scope for v0.2.
 - The full model evaluation runs on SQLite. The PostgreSQL/pgvector path is validated in CI with the
   deterministic hash provider, not with the multilingual model.
 - The model evaluation depends on the embedding provider used to build the index. Re-seed after

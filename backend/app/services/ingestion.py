@@ -6,11 +6,17 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import pymupdf
-from sqlalchemy import select, text
+from sqlalchemy import delete, select, text
 from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
-from app.models.document import Chunk, Document, DocumentStatus
+from app.models.document import (
+    Chunk,
+    Document,
+    DocumentStatus,
+    IngestionJob,
+    IngestionJobStatus,
+)
 from app.services.embeddings import EmbeddingProvider, get_embedding_provider
 from app.services.text import chunk_text, normalize_whitespace, tokenize
 
@@ -45,17 +51,16 @@ def extract_pages(data: bytes) -> tuple[list[PageText], int, dict[str, str]]:
         return pages, pdf.page_count, metadata
 
 
-def ingest_pdf_bytes(
+def create_document_from_bytes(
     db: Session,
     data: bytes,
     *,
     filename: str,
     title: str | None = None,
-    provider: EmbeddingProvider | None = None,
     upload_dir: str | None = None,
 ) -> Document:
+    """Validate and persist a PDF without extracting or embedding it."""
     settings = get_settings()
-    provider = provider or get_embedding_provider()
     upload_dir = upload_dir or settings.upload_dir
     content_hash = hashlib.sha256(data).hexdigest()
 
@@ -82,16 +87,32 @@ def ingest_pdf_bytes(
         filename=filename,
         content_hash=content_hash,
         storage_path=str(storage_path),
-        status=DocumentStatus.PROCESSING,
+        status=DocumentStatus.QUEUED,
     )
     db.add(document)
     db.commit()
     db.refresh(document)
+    return document
+
+
+def process_document(
+    db: Session,
+    document: Document,
+    data: bytes,
+    *,
+    provider: EmbeddingProvider | None = None,
+) -> Document:
+    """Extract, chunk and embed an already persisted document."""
+    settings = get_settings()
+    provider = provider or get_embedding_provider()
 
     try:
         pages, page_count, _metadata = extract_pages(data)
         if not pages:
             raise IngestionError("No extractable text found in the PDF")
+
+        # A retried job must not append duplicate chunks.
+        db.execute(delete(Chunk).where(Chunk.document_id == document.id))
 
         pending: list[tuple[int, int, str]] = []
         chunk_index = 0
@@ -161,3 +182,80 @@ def ingest_pdf_bytes(
         if isinstance(error, IngestionError):
             raise
         raise IngestionError(str(error)) from error
+
+
+def process_document_from_storage(
+    db: Session,
+    document: Document,
+    *,
+    provider: EmbeddingProvider | None = None,
+) -> Document:
+    path = Path(document.storage_path)
+    if not path.exists():
+        raise IngestionError("Stored PDF not found")
+    return process_document(db, document, path.read_bytes(), provider=provider)
+
+
+def ingest_pdf_bytes(
+    db: Session,
+    data: bytes,
+    *,
+    filename: str,
+    title: str | None = None,
+    provider: EmbeddingProvider | None = None,
+    upload_dir: str | None = None,
+) -> Document:
+    """Synchronous ingestion used by the seed script and the default demo mode."""
+    document = create_document_from_bytes(
+        db,
+        data,
+        filename=filename,
+        title=title,
+        upload_dir=upload_dir,
+    )
+    if document.status == DocumentStatus.READY:
+        return document
+    return process_document(db, document, data, provider=provider)
+
+
+def queue_pdf_bytes(
+    db: Session,
+    data: bytes,
+    *,
+    filename: str,
+    title: str | None = None,
+    upload_dir: str | None = None,
+) -> Document:
+    """Persist a PDF and enqueue a durable job for a worker."""
+    settings = get_settings()
+    document = create_document_from_bytes(
+        db,
+        data,
+        filename=filename,
+        title=title,
+        upload_dir=upload_dir,
+    )
+    if document.status == DocumentStatus.READY:
+        return document
+
+    if document.status == DocumentStatus.FAILED:
+        document.status = DocumentStatus.QUEUED
+        document.error = None
+
+    active_job = db.scalar(
+        select(IngestionJob).where(
+            IngestionJob.document_id == document.id,
+            IngestionJob.status.in_([IngestionJobStatus.QUEUED, IngestionJobStatus.PROCESSING]),
+        )
+    )
+    if active_job is None:
+        db.add(
+            IngestionJob(
+                document_id=document.id,
+                status=IngestionJobStatus.QUEUED,
+                max_attempts=settings.worker_max_attempts,
+            )
+        )
+    db.commit()
+    db.refresh(document)
+    return document
