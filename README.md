@@ -18,7 +18,7 @@ the document and page it came from. If the manuals do not contain enough evidenc
 instead of guessing.
 
 The project is deliberately evaluation-first: the retrieval and grounding pipeline is measured with a
-60-question dataset, and the same checks run in CI.
+100-question dataset, and the same checks run in CI.
 
 ## Why this project
 
@@ -35,18 +35,18 @@ system useful in a technical setting:
 ## Eval results
 
 Full evaluation with the multilingual static embedding model
-(`minishlab/potion-multilingual-128M`), 60 questions over 6 manuals (17 pages):
+(`minishlab/potion-multilingual-128M`), 100 questions over 11 manuals (32 pages):
 
 | Metric | Result |
 | --- | ---: |
 | hit@5 | **1.000** |
-| MRR | **0.872** |
+| MRR | **0.865** |
 | Citation accuracy | **1.000** |
 | Refusal accuracy | **1.000** |
 | Answer rate (answerable questions) | **1.000** |
 | Citation support | **1.000** |
 
-- **50** questions are answerable from the corpus; **10** are out-of-domain and must be refused.
+- **90** questions are answerable from the corpus; **10** are out-of-domain and must be refused.
 - Citation support checks that every quoted citation is an exact substring of the cited chunk.
 - The full report is in [`backend/evals/runs/model2vec.json`](backend/evals/runs/model2vec.json).
 - The full model evaluation above runs on SQLite. CI additionally runs the hash-provider smoke
@@ -60,11 +60,11 @@ See [`docs/evals.md`](docs/evals.md) for the methodology and per-question detail
 
 ### Local performance
 
-Benchmark on the demo corpus with the multilingual model warmed up (50 questions × 5 runs, CPU):
+Benchmark on the demo corpus with the multilingual model warmed up (90 questions × 5 runs, CPU):
 
 | p50 | p95 | Mean | Marginal cost |
 | ---: | ---: | ---: | ---: |
-| 2.5 ms | 2.7 ms | 2.5 ms | **$0.00 / query** |
+| 4.0 ms | 4.8 ms | 4.1 ms | **$0.00 / query** |
 
 The measurement covers retrieval plus extractive answer selection. It excludes the one-time model
 load on a cold process. Run it yourself with `make bench`; the raw report is
@@ -144,9 +144,9 @@ uvicorn app.main:app --reload
 ### Tests and evals
 
 ```bash
-make test          # 22 unit and API tests
+make test          # 23 unit and API tests
 make lint          # ruff + mypy
-make eval          # full 60-question evaluation
+make eval          # full 100-question evaluation
 make eval-check    # fails if the full evaluation drops below thresholds
 make bench         # local retrieval + answer latency benchmark
 make smoke         # deterministic hash-embedding CI smoke eval
@@ -169,8 +169,10 @@ python -m app.worker        # continuous worker
 
 The upload endpoint returns `202` with a `queued` document, and the UI polls the manual list while the
 worker extracts, chunks, and embeds the PDF. Jobs live in `ingestion_jobs`; PostgreSQL workers claim
-with `FOR UPDATE SKIP LOCKED`, and failed jobs retry up to `WORKER_MAX_ATTEMPTS`. The Docker start
-script launches a background worker automatically when `INGESTION_MODE=queued`.
+with `FOR UPDATE SKIP LOCKED`, and failed jobs retry up to `WORKER_MAX_ATTEMPTS`. Workers refresh a
+heartbeat while processing; `WORKER_STALE_SECONDS` (default 900) controls when an orphaned
+`processing` job is requeued. The Docker start script launches a background worker automatically when
+`INGESTION_MODE=queued`.
 
 ## Deployment
 
@@ -242,7 +244,7 @@ backend/
       text.py            Tokenization, sentence splitting, chunking
     worker.py            Durable ingestion worker (SKIP LOCKED, retries)
     templates/           Jinja/HTMX UI
-  data/corpus/           Six synthetic demo manuals
+  data/corpus/           Eleven synthetic demo manuals
   evals/                 Full and smoke datasets + evaluation reports
   migrations/            Alembic migrations (documents, pgvector, jobs)
   scripts/               Corpus generation, seeding, evaluation, container start
@@ -276,7 +278,7 @@ More context: [`docs/architecture.md`](docs/architecture.md) and
 
 This is a portfolio v0.2, not a production document platform.
 
-- The demo corpus is small (17 pages). The evaluation is designed to be honest, not exhaustive.
+- The demo corpus is small (32 pages). The evaluation is designed to be honest, not exhaustive.
 - The multilingual model needs about 2 GB of RAM; the free-tier deployment uses the lexical hash
   provider instead.
 - Answers are extractive and single-evidence; multi-hop and conversational answers are future work.
@@ -289,7 +291,7 @@ This is a portfolio v0.2, not a production document platform.
   production path and is CI-tested.
 
 Planned next steps: an optional cited LLM answer provider, OCR for scanned manuals, a larger
-100-question evaluation set, and a persistent pgvector deployment.
+150-question evaluation set, and a persistent pgvector deployment.
 
 ## Stack
 

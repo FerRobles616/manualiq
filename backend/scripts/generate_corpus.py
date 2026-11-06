@@ -161,6 +161,138 @@ DOCUMENTS = {
             ],
         ],
     },
+    "generator_gen15": {
+        "title": "Generator GEN-15 Service Manual",
+        "pages": [
+            [
+                "1. Specifications",
+                "The GEN-15 generator has a rated output of 15 kW.",
+                "The generator produces 230 V single-phase and 400 V three-phase power.",
+                "The operating frequency is 50 Hz.",
+                "The fuel tank holds 60 liters of diesel.",
+            ],
+            [
+                "2. Maintenance schedule",
+                "Change the engine oil every 250 operating hours.",
+                "Replace the oil filter every 500 operating hours.",
+                "Change the coolant every 1000 operating hours.",
+                "Check the battery electrolyte level every month.",
+            ],
+            [
+                "3. Error codes and warranty",
+                "E01 means low oil pressure. Stop the engine and check the oil level.",
+                "E02 means high coolant temperature. Check the coolant level and radiator.",
+                "E03 means generator overvoltage. Check the automatic voltage regulator.",
+                "To reset the controller, turn the key to OFF and wait 30 seconds.",
+                "The warranty period is 24 months for the generator.",
+            ],
+        ],
+    },
+    "steam_boiler_b90": {
+        "title": "Steam Boiler B-90 Operation Manual",
+        "pages": [
+            [
+                "1. Boiler specifications",
+                "The B-90 steam boiler has a maximum working pressure of 10 bar.",
+                "The maximum steam temperature is 180 °C.",
+                "The water capacity is 2000 liters.",
+                "The burner uses natural gas.",
+            ],
+            [
+                "2. Operation and inspection",
+                "Perform a bottom blowdown every day.",
+                "Test the safety valve every week.",
+                "Test the low-water cutoff every month.",
+                "Have the boiler inspected annually by an authorized inspector.",
+            ],
+            [
+                "3. Safety devices and records",
+                "A low-water condition trips the burner and opens the alarm.",
+                "A flame failure locks out the burner; investigate before resetting.",
+                "For an emergency shutdown, close the main gas valve and press the emergency stop.",
+                "Keep the boiler log for three years.",
+            ],
+        ],
+    },
+    "fire_extinguisher_sop": {
+        "title": "Fire Extinguisher Inspection Procedure",
+        "pages": [
+            [
+                "1. Inspection schedule",
+                "Inspect every extinguisher visually every month.",
+                "Have a professional inspection annually.",
+                "Dry chemical extinguishers require maintenance every 6 years.",
+                "Hydrostatic testing is required every 12 years.",
+            ],
+            [
+                "2. Visual inspection steps",
+                "Check that the pressure gauge is in the green zone.",
+                "Verify the pull pin is sealed and the tamper seal is intact.",
+                "Inspect the hose and nozzle for cracks or blockage.",
+                "Record the inspection date and inspector name on the tag.",
+            ],
+            [
+                "3. Pass, fail, and records",
+                "Remove the extinguisher from service if the gauge is outside the green zone.",
+                "A damaged hose or missing pin means the extinguisher fails inspection.",
+                "Tag a failed extinguisher and place it in the red service area.",
+                "Keep inspection records for five years.",
+            ],
+        ],
+    },
+    "chemical_handling_sop": {
+        "title": "Chemical Handling Procedure",
+        "pages": [
+            [
+                "1. Preparation and storage",
+                "Read the safety data sheet before handling any chemical.",
+                "Required PPE includes chemical goggles, nitrile gloves, and a face shield.",
+                "Store chemicals in labeled containers with GHS labels.",
+                "Keep incompatible chemicals in separate cabinets.",
+            ],
+            [
+                "2. Spill response",
+                "For a small spill, evacuate the area and ventilate it.",
+                "Contain the spill with absorbent material and place it in a labeled "
+                "waste container.",
+                "For a large spill, call emergency services and do not attempt cleanup.",
+                "Report every spill to the supervisor.",
+            ],
+            [
+                "3. Exposure, training, and waste",
+                "Use the eyewash station for at least 15 minutes after eye contact.",
+                "Train employees on chemical handling every year.",
+                "Dispose of chemical waste through the approved hazardous waste vendor.",
+                "Keep the SDS accessible for every chemical in the work area.",
+            ],
+        ],
+    },
+    "electrical_panel_sop": {
+        "title": "Electrical Panel Maintenance Procedure",
+        "pages": [
+            [
+                "1. Scope and PPE",
+                "The procedure applies to panels energized at 50 volts or more.",
+                "Required PPE includes arc-rated clothing, a face shield, and "
+                "voltage-rated gloves.",
+                "Only qualified electricians may open an energized panel.",
+            ],
+            [
+                "2. Isolation and inspection",
+                "De-energize and lock out the panel before removing covers.",
+                "Verify zero voltage with a meter rated for the panel voltage.",
+                "Inspect busbars and terminals for discoloration or overheating.",
+                "Tighten terminal connections to 20 Nm.",
+            ],
+            [
+                "3. Thermal scan and repairs",
+                "Perform a thermal scan of the panel annually.",
+                "A hot spot above 20 °C over ambient requires investigation.",
+                "Record the thermal scan results in the maintenance log.",
+                "Replace damaged breakers with the same voltage and current rating.",
+            ],
+        ],
+    },
 }
 
 

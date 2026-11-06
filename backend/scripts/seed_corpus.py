@@ -12,6 +12,11 @@ TITLES = {
     "forklift_fl30": "Forklift FL-30 Service Manual",
     "air_compressor_ac75": "Air Compressor AC-75 Service Manual",
     "confined_space_sop": "Confined Space Entry Procedure",
+    "generator_gen15": "Generator GEN-15 Service Manual",
+    "steam_boiler_b90": "Steam Boiler B-90 Operation Manual",
+    "fire_extinguisher_sop": "Fire Extinguisher Inspection Procedure",
+    "chemical_handling_sop": "Chemical Handling Procedure",
+    "electrical_panel_sop": "Electrical Panel Maintenance Procedure",
 }
 
 

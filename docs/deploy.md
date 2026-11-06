@@ -123,8 +123,9 @@ python -m app.worker --once # process at most one job
 
 `scripts/start.sh` starts a background worker automatically when `INGESTION_MODE=queued`, before
 Uvicorn. For a production deployment, run the worker as a separate service so it can be scaled and
-monitored independently. The worker uses PostgreSQL `FOR UPDATE SKIP LOCKED` and requeues failed jobs
-up to the configured limit.
+monitored independently. The worker uses PostgreSQL `FOR UPDATE SKIP LOCKED`, requeues failed jobs up
+to the configured limit, refreshes a heartbeat while processing, and requeues orphaned `processing`
+jobs after `WORKER_STALE_SECONDS` (default 900).
 
 ## Operational notes
 

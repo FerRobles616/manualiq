@@ -1,18 +1,18 @@
 {
-  "timestamp": "2026-11-06T00:29:53.575986+00:00",
+  "timestamp": "2026-11-06T01:08:22.370378+00:00",
   "dataset": "evals/dataset.jsonl",
   "top_k": 5,
   "provider": "model2vec",
   "model": "minishlab/potion-multilingual-128M",
   "metrics": {
     "hit_at_k": 1.0,
-    "mrr": 0.8716666666666667,
+    "mrr": 0.8648148148148148,
     "citation_accuracy": 1.0,
     "refusal_accuracy": 1.0,
     "answer_rate": 1.0,
     "citation_support": 1.0,
-    "answered": 50,
-    "cases": 60
+    "answered": 90,
+    "cases": 100
   },
   "results": [
     {
@@ -67,9 +67,9 @@
     },
     {
       "id": "q06",
-      "question": "How frequently should the hoses be inspected?",
+      "question": "How frequently should the H-200 hoses be inspected?",
       "answerable": true,
-      "gold_rank": 1,
+      "gold_rank": 3,
       "refused": false,
       "citation_match": true,
       "citation_supported": true,
@@ -419,7 +419,7 @@
       "id": "q41",
       "question": "How often should the compressor oil be changed?",
       "answerable": true,
-      "gold_rank": 2,
+      "gold_rank": 1,
       "refused": false,
       "citation_match": true,
       "citation_supported": true,
@@ -427,9 +427,9 @@
     },
     {
       "id": "q42",
-      "question": "When should the oil filter be replaced?",
+      "question": "When should the AC-75 oil filter be replaced?",
       "answerable": true,
-      "gold_rank": 1,
+      "gold_rank": 2,
       "refused": false,
       "citation_match": true,
       "citation_supported": true,
@@ -614,6 +614,406 @@
       "citation_match": false,
       "citation_supported": true,
       "answer": "I couldn't find enough evidence in the loaded manuals to answer that question."
+    },
+    {
+      "id": "q61",
+      "question": "What is the rated output of the GEN-15?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 The GEN-15 generator has a rated output of 15 kW. [1]"
+    },
+    {
+      "id": "q62",
+      "question": "What voltages does the GEN-15 produce?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 The GEN-15 generator has a rated output of 15 kW. [1]"
+    },
+    {
+      "id": "q63",
+      "question": "What is the operating frequency of the GEN-15?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 The GEN-15 generator has a rated output of 15 kW. [1]"
+    },
+    {
+      "id": "q64",
+      "question": "What fuel does the GEN-15 use?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 The GEN-15 generator has a rated output of 15 kW. [1]"
+    },
+    {
+      "id": "q65",
+      "question": "How often should the GEN-15 engine oil be changed?",
+      "answerable": true,
+      "gold_rank": 2,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Change the engine oil every 250 operating hours. [1]"
+    },
+    {
+      "id": "q66",
+      "question": "When should the GEN-15 oil filter be replaced?",
+      "answerable": true,
+      "gold_rank": 2,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Replace the oil filter every 500 operating hours. [1]"
+    },
+    {
+      "id": "q67",
+      "question": "What does error E02 mean on the GEN-15?",
+      "answerable": true,
+      "gold_rank": 3,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 E02 means high coolant temperature. [1]"
+    },
+    {
+      "id": "q68",
+      "question": "How long is the GEN-15 warranty?",
+      "answerable": true,
+      "gold_rank": 4,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 The warranty period is 24 months for the generator. [1]"
+    },
+    {
+      "id": "q69",
+      "question": "What is the maximum working pressure of the B-90?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 The B-90 steam boiler has a maximum working pressure of 10 bar. [1]"
+    },
+    {
+      "id": "q70",
+      "question": "What is the maximum steam temperature of the B-90?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 The maximum steam temperature is 180 \u00b0C. [1]"
+    },
+    {
+      "id": "q71",
+      "question": "What is the water capacity of the B-90?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 The water capacity is 2000 liters. [1]"
+    },
+    {
+      "id": "q72",
+      "question": "What fuel does the B-90 burner use?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 The B-90 steam boiler has a maximum working pressure of 10 bar. [1]"
+    },
+    {
+      "id": "q73",
+      "question": "How often should the B-90 bottom blowdown be performed?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Perform a bottom blowdown every day. [1]"
+    },
+    {
+      "id": "q74",
+      "question": "How often should the B-90 safety valve be tested?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Test the safety valve every week. [1]"
+    },
+    {
+      "id": "q75",
+      "question": "How often should the B-90 low-water cutoff be tested?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Test the low-water cutoff every month. [1]"
+    },
+    {
+      "id": "q76",
+      "question": "How do I perform an emergency shutdown of the B-90?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 For an emergency shutdown, close the main gas valve and press the emergency stop. [1]"
+    },
+    {
+      "id": "q77",
+      "question": "How often should fire extinguishers be visually inspected?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Dry chemical extinguishers require maintenance every 6 years. [1]"
+    },
+    {
+      "id": "q78",
+      "question": "How often is a professional fire extinguisher inspection required?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Hydrostatic testing is required every 12 years. [1]"
+    },
+    {
+      "id": "q79",
+      "question": "How often do dry chemical extinguishers need maintenance?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Dry chemical extinguishers require maintenance every 6 years. [1]"
+    },
+    {
+      "id": "q80",
+      "question": "When is hydrostatic testing required for fire extinguishers?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Hydrostatic testing is required every 12 years. [1]"
+    },
+    {
+      "id": "q81",
+      "question": "What should I check on the fire extinguisher pressure gauge?",
+      "answerable": true,
+      "gold_rank": 3,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Check that the pressure gauge is in the green zone. [1]"
+    },
+    {
+      "id": "q82",
+      "question": "What should I check on the fire extinguisher pull pin?",
+      "answerable": true,
+      "gold_rank": 2,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Verify the pull pin is sealed and the tamper seal is intact. [1]"
+    },
+    {
+      "id": "q83",
+      "question": "What should I do with a failed fire extinguisher?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Tag a failed extinguisher and place it in the red service area. [1]"
+    },
+    {
+      "id": "q84",
+      "question": "How long are fire extinguisher inspection records kept?",
+      "answerable": true,
+      "gold_rank": 2,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Keep inspection records for five years. [1]"
+    },
+    {
+      "id": "q85",
+      "question": "What should I read before handling a chemical?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Read the safety data sheet before handling any chemical. [1]"
+    },
+    {
+      "id": "q86",
+      "question": "Which PPE is required for chemical handling?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Required PPE includes chemical goggles, nitrile gloves, and a face shield. [1]"
+    },
+    {
+      "id": "q87",
+      "question": "How should chemical containers be labeled?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Store chemicals in labeled containers with GHS labels. [1]"
+    },
+    {
+      "id": "q88",
+      "question": "How should incompatible chemicals be stored?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Keep incompatible chemicals in separate cabinets. [1]"
+    },
+    {
+      "id": "q89",
+      "question": "What should I do first for a small chemical spill?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 For a large spill, call emergency services and do not attempt cleanup. [1]"
+    },
+    {
+      "id": "q90",
+      "question": "What should I do for a large chemical spill?",
+      "answerable": true,
+      "gold_rank": 2,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 For a large spill, call emergency services and do not attempt cleanup. [1]"
+    },
+    {
+      "id": "q91",
+      "question": "How long should I use the eyewash after eye contact?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Use the eyewash station for at least 15 minutes after eye contact. [1]"
+    },
+    {
+      "id": "q92",
+      "question": "How often is chemical handling training required?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Train employees on chemical handling every year. [1]"
+    },
+    {
+      "id": "q93",
+      "question": "At what voltage does the electrical panel procedure apply?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 The procedure applies to panels energized at 50 volts or more. [1]"
+    },
+    {
+      "id": "q94",
+      "question": "Which PPE is required for electrical panel work?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Required PPE includes arc-rated clothing, a face shield, and voltage-rated gloves. [1]"
+    },
+    {
+      "id": "q95",
+      "question": "Who may open an energized electrical panel?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Only qualified electricians may open an energized panel. [1]"
+    },
+    {
+      "id": "q96",
+      "question": "What must be done before removing an electrical panel cover?",
+      "answerable": true,
+      "gold_rank": 2,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 De-energize and lock out the panel before removing covers. [1]"
+    },
+    {
+      "id": "q97",
+      "question": "How should I verify zero voltage on the panel?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Verify zero voltage with a meter rated for the panel voltage. [1]"
+    },
+    {
+      "id": "q98",
+      "question": "What torque should electrical panel terminal connections use?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Tighten terminal connections to 20 Nm. [1]"
+    },
+    {
+      "id": "q99",
+      "question": "How often should an electrical panel thermal scan be performed?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Perform a thermal scan of the panel annually. [1]"
+    },
+    {
+      "id": "q100",
+      "question": "What hot spot temperature requires investigation on a panel?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 A hot spot above 20 \u00b0C over ambient requires investigation. [1]"
     }
   ]
 }

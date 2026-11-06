@@ -1,3 +1,5 @@
+from datetime import UTC, datetime, timedelta
+
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -9,7 +11,7 @@ from app.models.document import (
 )
 from app.services.embeddings import HashEmbeddingProvider
 from app.services.ingestion import queue_pdf_bytes
-from app.worker import process_next_job
+from app.worker import claim_next_job, process_next_job, recover_stale_jobs
 from tests.factories import make_pdf
 
 
@@ -113,3 +115,35 @@ def test_queued_upload_returns_202_and_becomes_ready(
     queued_document = db_session.scalar(select(Document))
     assert queued_document is not None
     assert queued_document.status == DocumentStatus.READY
+
+
+def test_stale_processing_job_is_requeued(
+    db_session: Session,
+    provider: HashEmbeddingProvider,
+    tmp_path,
+    pdf_bytes: bytes,
+) -> None:
+    document = queue_pdf_bytes(
+        db_session,
+        pdf_bytes,
+        filename="hydraulic_press_h200.pdf",
+        upload_dir=str(tmp_path),
+    )
+    job = claim_next_job(db_session)
+    assert job is not None
+    assert job.status == IngestionJobStatus.PROCESSING
+    assert job.heartbeat_at is not None
+
+    job.heartbeat_at = datetime.now(UTC) - timedelta(seconds=120)
+    db_session.commit()
+
+    assert recover_stale_jobs(db_session, stale_seconds=10) == 1
+    db_session.refresh(job)
+    db_session.refresh(document)
+    assert job.status == IngestionJobStatus.QUEUED
+    assert job.heartbeat_at is None
+    assert document.status == DocumentStatus.QUEUED
+
+    assert process_next_job(db_session, provider=provider) is True
+    db_session.refresh(document)
+    assert document.status == DocumentStatus.READY

@@ -148,16 +148,18 @@ class ExtractiveAnswerService:
         time_question = (
             any(
                 term in question_lower.split()
-                for term in ("often", "frequently", "when", "frequency", "interval")
+                for term in ("often", "frequently", "when", "interval")
             )
             or "how long" in question_lower
         )
+        error_codes = {token for token in question_tokens if re.fullmatch(r"e\d+", token)}
 
         selected = self._select_sentence(
             question_tokens,
             retrieved,
             min_similarity=min_similarity,
             time_question=time_question,
+            error_codes=error_codes,
         )
         if selected is None:
             return self._refusal()
@@ -185,6 +187,7 @@ class ExtractiveAnswerService:
         *,
         min_similarity: float,
         time_question: bool,
+        error_codes: set[str],
     ) -> tuple[RetrievedChunk, str, float] | None:
         specific_terms = question_tokens - _GENERIC_TERMS - _TIME_UNITS
         best: tuple[float, float, int, RetrievedChunk, str] | None = None
@@ -205,7 +208,9 @@ class ExtractiveAnswerService:
             # at least two title terms.
             title_bonus = (
                 2.0
-                if any(token.isdigit() for token in entity_matches) or len(entity_matches) >= 2
+                if any(token.isdigit() for token in entity_matches)
+                or len(entity_matches) >= 2
+                or any(len(token) >= 6 for token in entity_matches)
                 else 0.0
             )
 
@@ -217,8 +222,16 @@ class ExtractiveAnswerService:
                 score = float(len(sentence_tokens & question_tokens)) + title_bonus
 
                 if time_question and sentence_tokens & _TIME_UNITS:
-                    score += 2.0
+                    score += 3.0
                 if "reset" in question_tokens and "reset" in sentence_tokens:
+                    score += 2.0
+                if error_codes and sentence_tokens & error_codes:
+                    score += 3.0
+                if question_tokens & {"check", "verify", "inspect"} and sentence_tokens & {
+                    "check",
+                    "verify",
+                    "inspect",
+                }:
                     score += 2.0
                 if "first" in question_tokens and sentence_tokens & {"first", "steps"}:
                     score += 2.0

@@ -100,8 +100,10 @@ In **sync** mode (the default), steps 2–6 happen inside the upload request. In
 upload commits the document and an `ingestion_jobs` row, and `app/worker.py` claims the job. The worker
 sets the job/document to `processing`, runs the same processing function, and marks both `ready`. On
 failure it requeues up to `max_attempts`, then marks both `failed`. PostgreSQL workers use
-`FOR UPDATE SKIP LOCKED`; SQLite uses a single-worker claim. The API returns `202 Accepted` in queued
-mode and the UI polls for status changes.
+`FOR UPDATE SKIP LOCKED`; SQLite uses a single-worker claim. Workers update a heartbeat while
+processing, and the recovery pass requeues jobs whose heartbeat is older than
+`WORKER_STALE_SECONDS`. The API returns `202 Accepted` in queued mode and the UI polls for status
+changes.
 
 The extraction step is layout-aware rather than a full document-layout model: it preserves paragraph
 and heading boundaries that PyMuPDF exposes, but it does not reconstruct tables, figures, or a
@@ -176,8 +178,8 @@ written to `evals/runs/` as JSON.
   can be added later only if it returns structured citations that pass the same support checks.
 - **Synchronous by default.** Small PDFs index in seconds; queued mode adds a durable worker, but the
   demo remains synchronous to avoid running a second process on the free host.
-- **Worker supervision.** The worker has retry limits but no stale-`processing` recovery or dead-letter
-  queue yet; a production deployment should add heartbeats and metrics.
+- **Worker supervision.** The worker refreshes a heartbeat and recovers stale `processing` jobs, but
+  there is no metrics endpoint or dead-letter dashboard yet; a production deployment should add them.
 - **No authentication or rate limiting.** The upload endpoint is a demo surface. A hosted deployment
   needs an admin token or login, size limits at the edge, and per-IP rate limiting.
 - **Text PDFs only.** Scanned PDFs need OCR before extraction.
@@ -185,8 +187,8 @@ written to `evals/runs/` as JSON.
 ## Scaling path
 
 1. Benchmark pgvector/HNSW against the SQLite scan on a larger corpus and tune HNSW parameters.
-2. Add worker heartbeats, stale-job recovery, and a dead-letter queue.
+2. Add worker metrics, an admin queue view, and a dead-letter queue.
 3. Add section-aware chunking and document metadata (revision, equipment, language).
-4. Expand the gold set beyond 60 cases and add a human review pass.
+4. Expand the gold set beyond 100 cases and add a human review pass.
 5. Add an optional LLM answer provider with a strict citation/refusal contract and the same eval gates.
 6. Add OCR, auth, rate limiting, and a persistent hosted deployment.

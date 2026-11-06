@@ -13,14 +13,14 @@ The full dataset is [`backend/evals/dataset.jsonl`](../backend/evals/dataset.jso
 
 | Property | Value |
 | --- | ---: |
-| Total cases | 60 |
-| Answerable | 50 |
+| Total cases | 100 |
+| Answerable | 90 |
 | Out-of-domain / unanswerable | 10 |
-| Manuals | 6 |
-| Pages | 17 |
+| Manuals | 11 |
+| Pages | 32 |
 | Gold granularity | document + page |
 
-The six synthetic manuals are committed in [`backend/data/corpus`](../backend/data/corpus):
+The eleven synthetic manuals are committed in [`backend/data/corpus`](../backend/data/corpus):
 
 - **Hydraulic Press H-200 Service Manual** — pressure, oil, maintenance intervals, torque, warranty.
 - **HVAC CX-40 Service Manual** — refrigerant, charge, airflow, filters, error codes, reset.
@@ -28,6 +28,11 @@ The six synthetic manuals are committed in [`backend/data/corpus`](../backend/da
 - **Forklift FL-30 Service Manual** — capacity, battery, lift height, brakes, error codes, rescue.
 - **Air Compressor AC-75 Service Manual** — pressure, airflow, oil, filters, troubleshooting.
 - **Confined Space Entry Procedure** — permits, atmospheric limits, PPE, lockout, rescue, records.
+- **Generator GEN-15 Service Manual** — output, voltages, fuel, maintenance, error codes, warranty.
+- **Steam Boiler B-90 Operation Manual** — pressure, temperature, blowdown, safety devices, records.
+- **Fire Extinguisher Inspection Procedure** — schedules, gauge/pin checks, pass/fail, records.
+- **Chemical Handling Procedure** — SDS, PPE, storage, spill response, eyewash, training.
+- **Electrical Panel Maintenance Procedure** — voltage, PPE, lockout, torque, thermal scans.
 
 Questions include exact-term lookups and paraphrases. The ten unanswerable questions are
 out-of-domain (for example, a World Cup result, an email password reset, and a stock price) so the
@@ -65,20 +70,21 @@ Report generated with `minishlab/potion-multilingual-128M` and the default `MIN_
 | Metric | Result |
 | --- | ---: |
 | hit@5 | 1.000 |
-| MRR | 0.872 |
+| MRR | 0.865 |
 | Citation accuracy | 1.000 |
 | Refusal accuracy | 1.000 |
 | Answer rate | 1.000 |
 | Citation support | 1.000 |
-| Cases | 60 |
+| Cases | 100 |
 
 The full JSON report is committed at
 [`backend/evals/runs/model2vec.json`](../backend/evals/runs/model2vec.json). It includes every
 question, rank, citation decision, and answer.
 
-MRR is 0.872 rather than 1.000 because several gold pages rank 2–4 while another passage ranks first.
-The sentence-selection stage, including document-title entity matching and question-intent cues,
-recovers the correct page for every answerable question, which is why citation accuracy remains 1.000.
+MRR is 0.865 rather than 1.000 because several gold pages rank 2–5 while another passage ranks first.
+The sentence-selection stage, including document-title entity matching, error-code/unit cues, and
+question-intent scoring, recovers the correct page for every answerable question, which is why
+citation accuracy remains 1.000.
 
 ## CI smoke results
 
@@ -129,8 +135,8 @@ dataset, while still catching meaningful regressions.
 
 ## Limitations
 
-- The dataset is a 60-case synthetic portfolio baseline, not a production benchmark. It covers six
-  manuals but still uses page-level labels and a controlled corpus.
+- The dataset is a 100-case synthetic portfolio baseline, not a production benchmark. It covers
+  eleven manuals but still uses page-level labels and a controlled corpus.
 - Gold labels are page-level; a chunk may contain several facts on the same page.
 - Answers are extractive and single-evidence; multi-hop questions are out of scope for v0.2.
 - The full model evaluation runs on SQLite. The PostgreSQL/pgvector path is validated in CI with the

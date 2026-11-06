@@ -107,6 +107,7 @@ class IngestionJob(Base):
         nullable=False,
     )
     started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    heartbeat_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
 
     document: Mapped["Document"] = relationship(

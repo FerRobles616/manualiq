@@ -1,16 +1,16 @@
 {
-  "timestamp": "2026-11-06T00:29:58.802819+00:00",
+  "timestamp": "2026-11-06T01:08:28.975839+00:00",
   "dataset": "evals/dataset.jsonl",
   "provider": "model2vec",
   "model": "minishlab/potion-multilingual-128M",
   "runs": 5,
-  "queries_per_run": 50,
-  "total_queries": 250,
+  "queries_per_run": 90,
+  "total_queries": 450,
   "latency_ms": {
-    "mean": 2.5488652720232494,
-    "p50": 2.5407164994248888,
-    "p95": 2.669458999662311,
-    "max": 5.46383500113734
+    "mean": 4.106862742155499,
+    "p50": 4.008403000625549,
+    "p95": 4.807855000763084,
+    "max": 7.462476000000606
   },
   "cost_usd_per_query": 0.0,
   "platform": "Linux-7.2.11-200.nobara.fc44.x86_64-x86_64-with-glibc2.43",

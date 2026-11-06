@@ -28,6 +28,7 @@ class Settings(BaseSettings):
     ingestion_mode: Literal["sync", "queued"] = "sync"
     worker_poll_seconds: float = 2.0
     worker_max_attempts: int = 3
+    worker_stale_seconds: int = 900
 
     upload_dir: str = "./data/uploads"
     corpus_dir: str = "./data/corpus"

@@ -3,7 +3,7 @@
 {"id": "q03", "question": "Which hydraulic oil does the press use?", "document_title": "Hydraulic Press H-200 Service Manual", "page": 1, "answerable": true}
 {"id": "q04", "question": "How often should the H-200 hydraulic oil be changed?", "document_title": "Hydraulic Press H-200 Service Manual", "page": 2, "answerable": true}
 {"id": "q05", "question": "When should the H-200 oil filter be replaced?", "document_title": "Hydraulic Press H-200 Service Manual", "page": 2, "answerable": true}
-{"id": "q06", "question": "How frequently should the hoses be inspected?", "document_title": "Hydraulic Press H-200 Service Manual", "page": 2, "answerable": true}
+{"id": "q06", "question": "How frequently should the H-200 hoses be inspected?", "document_title": "Hydraulic Press H-200 Service Manual", "page": 2, "answerable": true}
 {"id": "q07", "question": "What should I check if the pressure drops below 120 bar?", "document_title": "Hydraulic Press H-200 Service Manual", "page": 3, "answerable": true}
 {"id": "q08", "question": "What causes an abnormal knocking noise?", "document_title": "Hydraulic Press H-200 Service Manual", "page": 3, "answerable": true}
 {"id": "q09", "question": "What torque do the press frame bolts require?", "document_title": "Hydraulic Press H-200 Service Manual", "page": 3, "answerable": true}
@@ -39,7 +39,7 @@
 {"id": "q39", "question": "What is the free air delivery of the AC-75?", "document_title": "Air Compressor AC-75 Service Manual", "page": 1, "answerable": true}
 {"id": "q40", "question": "Which compressor oil should I use?", "document_title": "Air Compressor AC-75 Service Manual", "page": 1, "answerable": true}
 {"id": "q41", "question": "How often should the compressor oil be changed?", "document_title": "Air Compressor AC-75 Service Manual", "page": 2, "answerable": true}
-{"id": "q42", "question": "When should the oil filter be replaced?", "document_title": "Air Compressor AC-75 Service Manual", "page": 2, "answerable": true}
+{"id": "q42", "question": "When should the AC-75 oil filter be replaced?", "document_title": "Air Compressor AC-75 Service Manual", "page": 2, "answerable": true}
 {"id": "q43", "question": "How often should I drain the AC-75 condensate?", "document_title": "Air Compressor AC-75 Service Manual", "page": 2, "answerable": true}
 {"id": "q44", "question": "What causes a high discharge temperature?", "document_title": "Air Compressor AC-75 Service Manual", "page": 3, "answerable": true}
 {"id": "q45", "question": "What causes a pressure drop in the AC-75?", "document_title": "Air Compressor AC-75 Service Manual", "page": 3, "answerable": true}
@@ -58,3 +58,43 @@
 {"id": "q58", "question": "Who wrote Hamlet?", "document_title": null, "page": null, "answerable": false}
 {"id": "q59", "question": "What is the recommended dose of ibuprofen?", "document_title": null, "page": null, "answerable": false}
 {"id": "q60", "question": "What is the stock price of Apple?", "document_title": null, "page": null, "answerable": false}
+{"id": "q61", "question": "What is the rated output of the GEN-15?", "document_title": "Generator GEN-15 Service Manual", "page": 1, "answerable": true}
+{"id": "q62", "question": "What voltages does the GEN-15 produce?", "document_title": "Generator GEN-15 Service Manual", "page": 1, "answerable": true}
+{"id": "q63", "question": "What is the operating frequency of the GEN-15?", "document_title": "Generator GEN-15 Service Manual", "page": 1, "answerable": true}
+{"id": "q64", "question": "What fuel does the GEN-15 use?", "document_title": "Generator GEN-15 Service Manual", "page": 1, "answerable": true}
+{"id": "q65", "question": "How often should the GEN-15 engine oil be changed?", "document_title": "Generator GEN-15 Service Manual", "page": 2, "answerable": true}
+{"id": "q66", "question": "When should the GEN-15 oil filter be replaced?", "document_title": "Generator GEN-15 Service Manual", "page": 2, "answerable": true}
+{"id": "q67", "question": "What does error E02 mean on the GEN-15?", "document_title": "Generator GEN-15 Service Manual", "page": 3, "answerable": true}
+{"id": "q68", "question": "How long is the GEN-15 warranty?", "document_title": "Generator GEN-15 Service Manual", "page": 3, "answerable": true}
+{"id": "q69", "question": "What is the maximum working pressure of the B-90?", "document_title": "Steam Boiler B-90 Operation Manual", "page": 1, "answerable": true}
+{"id": "q70", "question": "What is the maximum steam temperature of the B-90?", "document_title": "Steam Boiler B-90 Operation Manual", "page": 1, "answerable": true}
+{"id": "q71", "question": "What is the water capacity of the B-90?", "document_title": "Steam Boiler B-90 Operation Manual", "page": 1, "answerable": true}
+{"id": "q72", "question": "What fuel does the B-90 burner use?", "document_title": "Steam Boiler B-90 Operation Manual", "page": 1, "answerable": true}
+{"id": "q73", "question": "How often should the B-90 bottom blowdown be performed?", "document_title": "Steam Boiler B-90 Operation Manual", "page": 2, "answerable": true}
+{"id": "q74", "question": "How often should the B-90 safety valve be tested?", "document_title": "Steam Boiler B-90 Operation Manual", "page": 2, "answerable": true}
+{"id": "q75", "question": "How often should the B-90 low-water cutoff be tested?", "document_title": "Steam Boiler B-90 Operation Manual", "page": 2, "answerable": true}
+{"id": "q76", "question": "How do I perform an emergency shutdown of the B-90?", "document_title": "Steam Boiler B-90 Operation Manual", "page": 3, "answerable": true}
+{"id": "q77", "question": "How often should fire extinguishers be visually inspected?", "document_title": "Fire Extinguisher Inspection Procedure", "page": 1, "answerable": true}
+{"id": "q78", "question": "How often is a professional fire extinguisher inspection required?", "document_title": "Fire Extinguisher Inspection Procedure", "page": 1, "answerable": true}
+{"id": "q79", "question": "How often do dry chemical extinguishers need maintenance?", "document_title": "Fire Extinguisher Inspection Procedure", "page": 1, "answerable": true}
+{"id": "q80", "question": "When is hydrostatic testing required for fire extinguishers?", "document_title": "Fire Extinguisher Inspection Procedure", "page": 1, "answerable": true}
+{"id": "q81", "question": "What should I check on the fire extinguisher pressure gauge?", "document_title": "Fire Extinguisher Inspection Procedure", "page": 2, "answerable": true}
+{"id": "q82", "question": "What should I check on the fire extinguisher pull pin?", "document_title": "Fire Extinguisher Inspection Procedure", "page": 2, "answerable": true}
+{"id": "q83", "question": "What should I do with a failed fire extinguisher?", "document_title": "Fire Extinguisher Inspection Procedure", "page": 3, "answerable": true}
+{"id": "q84", "question": "How long are fire extinguisher inspection records kept?", "document_title": "Fire Extinguisher Inspection Procedure", "page": 3, "answerable": true}
+{"id": "q85", "question": "What should I read before handling a chemical?", "document_title": "Chemical Handling Procedure", "page": 1, "answerable": true}
+{"id": "q86", "question": "Which PPE is required for chemical handling?", "document_title": "Chemical Handling Procedure", "page": 1, "answerable": true}
+{"id": "q87", "question": "How should chemical containers be labeled?", "document_title": "Chemical Handling Procedure", "page": 1, "answerable": true}
+{"id": "q88", "question": "How should incompatible chemicals be stored?", "document_title": "Chemical Handling Procedure", "page": 1, "answerable": true}
+{"id": "q89", "question": "What should I do first for a small chemical spill?", "document_title": "Chemical Handling Procedure", "page": 2, "answerable": true}
+{"id": "q90", "question": "What should I do for a large chemical spill?", "document_title": "Chemical Handling Procedure", "page": 2, "answerable": true}
+{"id": "q91", "question": "How long should I use the eyewash after eye contact?", "document_title": "Chemical Handling Procedure", "page": 3, "answerable": true}
+{"id": "q92", "question": "How often is chemical handling training required?", "document_title": "Chemical Handling Procedure", "page": 3, "answerable": true}
+{"id": "q93", "question": "At what voltage does the electrical panel procedure apply?", "document_title": "Electrical Panel Maintenance Procedure", "page": 1, "answerable": true}
+{"id": "q94", "question": "Which PPE is required for electrical panel work?", "document_title": "Electrical Panel Maintenance Procedure", "page": 1, "answerable": true}
+{"id": "q95", "question": "Who may open an energized electrical panel?", "document_title": "Electrical Panel Maintenance Procedure", "page": 1, "answerable": true}
+{"id": "q96", "question": "What must be done before removing an electrical panel cover?", "document_title": "Electrical Panel Maintenance Procedure", "page": 2, "answerable": true}
+{"id": "q97", "question": "How should I verify zero voltage on the panel?", "document_title": "Electrical Panel Maintenance Procedure", "page": 2, "answerable": true}
+{"id": "q98", "question": "What torque should electrical panel terminal connections use?", "document_title": "Electrical Panel Maintenance Procedure", "page": 2, "answerable": true}
+{"id": "q99", "question": "How often should an electrical panel thermal scan be performed?", "document_title": "Electrical Panel Maintenance Procedure", "page": 3, "answerable": true}
+{"id": "q100", "question": "What hot spot temperature requires investigation on a panel?", "document_title": "Electrical Panel Maintenance Procedure", "page": 3, "answerable": true}
