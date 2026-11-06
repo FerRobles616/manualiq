@@ -81,6 +81,86 @@ DOCUMENTS = {
             ],
         ],
     },
+    "forklift_fl30": {
+        "title": "Forklift FL-30 Service Manual",
+        "pages": [
+            [
+                "1. Capacity and specifications",
+                "The FL-30 forklift has a rated lifting capacity of 3000 kg.",
+                "The traction battery is 48 V.",
+                "The maximum lift height is 6 meters.",
+                "The forklift uses solid pneumatic tires.",
+                "Operators must wear a hard hat and a high-visibility vest.",
+            ],
+            [
+                "2. Maintenance schedule",
+                "Check the battery water level every week.",
+                "Inspect the service brakes every 250 operating hours.",
+                "Change the hydraulic oil every 1000 operating hours.",
+                "Lubricate the mast chains every 50 operating hours.",
+            ],
+            [
+                "3. Error codes and emergency procedure",
+                "E01 means low battery voltage. Charge the battery.",
+                "E02 means motor overheat. Stop the forklift and let it cool.",
+                "E03 means low hydraulic pressure. Check the hydraulic lines.",
+                "To lower the forks in an emergency, pull the emergency lowering valve.",
+                "The warranty period is 18 months for the frame.",
+            ],
+        ],
+    },
+    "air_compressor_ac75": {
+        "title": "Air Compressor AC-75 Service Manual",
+        "pages": [
+            [
+                "1. Specifications",
+                "The AC-75 compressor has a 75 kW motor.",
+                "The maximum discharge pressure is 10 bar.",
+                "The free air delivery is 500 CFM.",
+                "Use ISO VG 46 compressor oil.",
+            ],
+            [
+                "2. Maintenance",
+                "Change the compressor oil every 2000 operating hours.",
+                "Replace the oil filter every 500 operating hours.",
+                "Drain the condensate from the receiver tank daily.",
+                "Inspect the drive belt every 250 operating hours.",
+            ],
+            [
+                "3. Troubleshooting and warranty",
+                "High discharge temperature usually means a blocked oil cooler.",
+                "A pressure drop usually means a leak in the air line.",
+                "To reset the compressor, press the red reset button for five seconds.",
+                "The warranty period is 24 months for the compressor unit.",
+            ],
+        ],
+    },
+    "confined_space_sop": {
+        "title": "Confined Space Entry Procedure",
+        "pages": [
+            [
+                "1. Permit and atmospheric limits",
+                "A confined space entry permit is required before entry.",
+                "The acceptable oxygen range is 19.5% to 23.5%.",
+                "Test for flammable gas and hydrogen sulfide before entry.",
+                "Required PPE includes a full-face respirator, gloves, and a safety harness.",
+            ],
+            [
+                "2. Entry and rescue",
+                "Isolate and lock out all energy sources before entry.",
+                "Ventilate the space and retest the atmosphere before entry.",
+                "A standby attendant must remain outside the space during entry.",
+                "If a worker collapses, call emergency services and use the tripod rescue system.",
+            ],
+            [
+                "3. Communication, evacuation, and records",
+                "Maintain continuous communication with the attendant.",
+                "Evacuate immediately if the gas monitor alarms.",
+                "Keep the entry permit for one year after the work.",
+                "Retrain entrants and attendants every year.",
+            ],
+        ],
+    },
 }
 
 

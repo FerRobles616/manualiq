@@ -9,6 +9,9 @@ TITLES = {
     "hydraulic_press_h200": "Hydraulic Press H-200 Service Manual",
     "hvac_cx40": "HVAC CX-40 Service Manual",
     "loto_procedure": "Lockout Tagout Procedure",
+    "forklift_fl30": "Forklift FL-30 Service Manual",
+    "air_compressor_ac75": "Air Compressor AC-75 Service Manual",
+    "confined_space_sop": "Confined Space Entry Procedure",
 }
 
 

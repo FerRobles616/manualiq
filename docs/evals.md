@@ -13,22 +13,25 @@ The full dataset is [`backend/evals/dataset.jsonl`](../backend/evals/dataset.jso
 
 | Property | Value |
 | --- | ---: |
-| Total cases | 26 |
-| Answerable | 21 |
-| Out-of-domain / unanswerable | 5 |
-| Manuals | 3 |
-| Pages | 8 |
+| Total cases | 60 |
+| Answerable | 50 |
+| Out-of-domain / unanswerable | 10 |
+| Manuals | 6 |
+| Pages | 17 |
 | Gold granularity | document + page |
 
-The three synthetic manuals are committed in [`backend/data/corpus`](../backend/data/corpus):
+The six synthetic manuals are committed in [`backend/data/corpus`](../backend/data/corpus):
 
 - **Hydraulic Press H-200 Service Manual** — pressure, oil, maintenance intervals, torque, warranty.
 - **HVAC CX-40 Service Manual** — refrigerant, charge, airflow, filters, error codes, reset.
 - **Lockout Tagout Procedure** — voltage threshold, PPE, lock ownership, inspection interval.
+- **Forklift FL-30 Service Manual** — capacity, battery, lift height, brakes, error codes, rescue.
+- **Air Compressor AC-75 Service Manual** — pressure, airflow, oil, filters, troubleshooting.
+- **Confined Space Entry Procedure** — permits, atmospheric limits, PPE, lockout, rescue, records.
 
-Questions include exact-term lookups and paraphrases. The five unanswerable questions are
-out-of-domain (for example, a World Cup result and an email password reset) so the refusal path is
-tested against questions that should never be answered from the manuals.
+Questions include exact-term lookups and paraphrases. The ten unanswerable questions are
+out-of-domain (for example, a World Cup result, an email password reset, and a stock price) so the
+refusal path is tested against questions that should never be answered from the manuals.
 
 The CI smoke set [`backend/evals/smoke.jsonl`](../backend/evals/smoke.jsonl) contains 12 cases
 (8 answerable, 4 unanswerable) chosen to work with the deterministic lexical embedding provider.
@@ -62,25 +65,26 @@ Report generated with `minishlab/potion-multilingual-128M` and the default `MIN_
 | Metric | Result |
 | --- | ---: |
 | hit@5 | 1.000 |
-| MRR | 0.905 |
+| MRR | 0.872 |
 | Citation accuracy | 1.000 |
 | Refusal accuracy | 1.000 |
 | Answer rate | 1.000 |
 | Citation support | 1.000 |
-| Cases | 26 |
+| Cases | 60 |
 
 The full JSON report is committed at
 [`backend/evals/runs/model2vec.json`](../backend/evals/runs/model2vec.json). It includes every
 question, rank, citation decision, and answer.
 
-MRR is 0.905 rather than 1.000 because four questions have the gold page at rank 2 while another
-chunk on the same or an adjacent page ranks first. The sentence-selection stage recovers the correct
-page for all of them, which is why citation accuracy remains 1.000.
+MRR is 0.872 rather than 1.000 because several gold pages rank 2–4 while another passage ranks first.
+The sentence-selection stage, including document-title entity matching and question-intent cues,
+recovers the correct page for every answerable question, which is why citation accuracy remains 1.000.
 
 ## CI smoke results
 
 CI cannot download the multilingual model on every run, so it indexes the corpus with the
-deterministic `HashEmbeddingProvider` and runs the smoke dataset:
+deterministic `HashEmbeddingProvider` and runs the smoke dataset against SQLite and against
+PostgreSQL with pgvector. The local SQLite smoke command is:
 
 ```bash
 cd backend
@@ -95,6 +99,10 @@ MIN_SIMILARITY=0.12 \
   --min-citation 0.70 \
   --min-refusal 0.80
 ```
+
+The PostgreSQL job uses the `pgvector/pgvector:pg17` service, runs the new migration (extension,
+`embedding_vec`, HNSW), seeds the corpus, and runs the same smoke evaluation through the pgvector
+retrieval path.
 
 The smoke run currently achieves hit@5 1.000, MRR 0.875, citation accuracy 1.000, refusal accuracy
 1.000, and citation support 1.000. It is a regression check for the pipeline, not a substitute for
@@ -121,9 +129,12 @@ dataset, while still catching meaningful regressions.
 
 ## Limitations
 
-- The dataset is small and synthetic. It is a portfolio baseline, not a benchmark.
+- The dataset is a 60-case synthetic portfolio baseline, not a production benchmark. It covers six
+  manuals but still uses page-level labels and a controlled corpus.
 - Gold labels are page-level; a chunk may contain several facts on the same page.
 - Answers are extractive and single-evidence; multi-hop questions are out of scope for v0.1.
+- The full model evaluation runs on SQLite. The PostgreSQL/pgvector path is validated in CI with the
+  deterministic hash provider, not with the multilingual model.
 - The model evaluation depends on the embedding provider used to build the index. Re-seed after
   changing `EMBEDDING_PROVIDER` or `EMBEDDING_MODEL`; otherwise query and chunk vectors are not
   comparable.

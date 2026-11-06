@@ -18,7 +18,7 @@ the document and page it came from. If the manuals do not contain enough evidenc
 instead of guessing.
 
 The project is deliberately evaluation-first: the retrieval and grounding pipeline is measured with a
-26-question dataset, and the same checks run in CI.
+60-question dataset, and the same checks run in CI.
 
 ## Why this project
 
@@ -35,20 +35,22 @@ system useful in a technical setting:
 ## Eval results
 
 Full evaluation with the multilingual static embedding model
-(`minishlab/potion-multilingual-128M`), 26 questions over 3 manuals (8 pages):
+(`minishlab/potion-multilingual-128M`), 60 questions over 6 manuals (17 pages):
 
 | Metric | Result |
 | --- | ---: |
 | hit@5 | **1.000** |
-| MRR | **0.905** |
+| MRR | **0.872** |
 | Citation accuracy | **1.000** |
 | Refusal accuracy | **1.000** |
 | Answer rate (answerable questions) | **1.000** |
 | Citation support | **1.000** |
 
-- **21** questions are answerable from the corpus; **5** are out-of-domain and must be refused.
+- **50** questions are answerable from the corpus; **10** are out-of-domain and must be refused.
 - Citation support checks that every quoted citation is an exact substring of the cited chunk.
 - The full report is in [`backend/evals/runs/model2vec.json`](backend/evals/runs/model2vec.json).
+- The full model evaluation above runs on SQLite. CI additionally runs the hash-provider smoke
+  evaluation against PostgreSQL with pgvector/HNSW, so both retrieval paths are exercised.
 - CI runs a smaller **smoke evaluation** with the deterministic lexical embedding provider, so CI
   never downloads the model and still exercises the whole pipeline.
 - CI also builds and runs the Docker image (seed + health + query) and validates Alembic, seed, and
@@ -58,11 +60,11 @@ See [`docs/evals.md`](docs/evals.md) for the methodology and per-question detail
 
 ### Local performance
 
-Benchmark on the demo corpus with the multilingual model warmed up (21 questions × 5 runs, CPU):
+Benchmark on the demo corpus with the multilingual model warmed up (50 questions × 5 runs, CPU):
 
 | p50 | p95 | Mean | Marginal cost |
 | ---: | ---: | ---: | ---: |
-| 1.7 ms | 2.0 ms | 1.7 ms | **$0.00 / query** |
+| 2.5 ms | 2.7 ms | 2.5 ms | **$0.00 / query** |
 
 The measurement covers retrieval plus extractive answer selection. It excludes the one-time model
 load on a cold process. Run it yourself with `make bench`; the raw report is
@@ -75,10 +77,10 @@ flowchart LR
     PDF[PDF upload] --> Extract[Layout-aware extraction]
     Extract --> Chunk[Page-aware chunks]
     Chunk --> Embed[Static multilingual embeddings]
-    Embed --> Store[(SQLite documents + chunks)]
+    Embed --> Store[(SQLite or PostgreSQL<br/>+ pgvector)]
     Q[Question] --> QEmbed[Query embedding]
-    Store --> BM25[BM25 ranking]
-    QEmbed --> Vector[Cosine ranking]
+    Store --> BM25[Lexical ranking]
+    QEmbed --> Vector[Vector ranking]
     BM25 --> RRF[Adaptive weighted RRF]
     Vector --> RRF
     RRF --> Select[Sentence selection + evidence guard]
@@ -88,9 +90,10 @@ flowchart LR
 
 1. **Ingestion**: PyMuPDF extracts text blocks page by page, keeping headings and wrapped paragraphs
    separate. The text is split into overlapping, page-aware chunks and embedded in batches.
-2. **Retrieval**: BM25 and cosine similarity rank the chunks independently. An adaptive weighted RRF
-   combines the rankings; BM25 gets more weight when it has a positive signal, while semantic-only
-   questions fall back to vector ranking. Zero-score candidates are excluded.
+2. **Retrieval**: Two paths share the same fusion and answer logic. On SQLite, BM25 and cosine
+   similarity rank chunks in process. On PostgreSQL, `ts_rank_cd` full-text ranking and pgvector's
+   `<=>` cosine search run in the database; the vector column has an HNSW index. An adaptive weighted
+   RRF combines the rankings in both cases.
 3. **Answer selection**: The top three chunks are considered. The best sentence is selected using
    question intent cues (intervals, numeric specifications, reset steps, required PPE) plus lexical
    overlap. Only sentences with supporting evidence survive.
@@ -143,14 +146,15 @@ uvicorn app.main:app --reload
 ```bash
 make test          # 19 unit and API tests
 make lint          # ruff + mypy
-make eval          # full 26-question evaluation
+make eval          # full 60-question evaluation
 make eval-check    # fails if the full evaluation drops below thresholds
 make bench         # local retrieval + answer latency benchmark
 make smoke         # deterministic hash-embedding CI smoke eval
 ```
 
 The Docker image includes the optional PostgreSQL driver. For a local PostgreSQL database, install
-`pip install -e ".[dev,postgres]"` and set `DATABASE_URL` (see `backend/.env.example`).
+`pip install -e ".[dev,postgres]"`, use a pgvector-enabled PostgreSQL instance, and set `DATABASE_URL`
+(see `backend/.env.example`). SQLite remains the zero-dependency local demo.
 
 ## Deployment
 
@@ -159,9 +163,9 @@ The Docker image includes the optional PostgreSQL driver. For a local PostgreSQL
 A Render Blueprint is included in [`render.yaml`](render.yaml), with step-by-step notes in
 [`docs/deploy.md`](docs/deploy.md). The free-tier blueprint uses the deterministic hash provider and
 ephemeral SQLite: the multilingual model needs about 2 GB of RAM, and FieldOps already occupies the
-account's single free PostgreSQL slot. The PostgreSQL path is CI-tested; set `DATABASE_URL` to a paid
-or external Postgres for persistence. Run locally for semantic mode. Apply the Blueprint from the
-Render dashboard; no secrets belong in the repository.
+account's single free PostgreSQL slot. The PostgreSQL + pgvector path is CI-tested; set `DATABASE_URL`
+to a paid or external pgvector-enabled Postgres for persistence. Run locally for semantic mode.
+Apply the Blueprint from the Render dashboard; no secrets belong in the repository.
 
 ## API
 
@@ -239,9 +243,10 @@ docs/                    Architecture, evaluation, deployment, ADR, screenshots
   on CPU without PyTorch or a GPU. The deterministic hash provider keeps CI fast and offline.
 - **Hybrid retrieval.** BM25 is hard to beat for part numbers, error codes, and exact units. Vectors
   handle paraphrases. Weighted RRF lets both contribute without a learned reranker.
-- **Local-first storage.** SQLite keeps the demo zero-dependency. Embeddings are JSON arrays and
-  cosine similarity is computed in process. This is appropriate for a small manual corpus; pgvector
-  with HNSW is the scaling path.
+- **Local-first storage.** SQLite keeps the demo zero-dependency: JSON embeddings and an in-process
+  cosine scan. The production path uses PostgreSQL with a `vector(256)` column and an HNSW cosine
+  index via pgvector; the migration, seed, and retrieval path are validated in CI. The free Render
+  demo stays on SQLite because pgvector needs a PostgreSQL deployment.
 - **Evaluation as a product feature.** Thresholds in CI prevent silent retrieval regressions. The
   smoke set and the full model evaluation are deliberately separate.
 
@@ -252,24 +257,25 @@ More context: [`docs/architecture.md`](docs/architecture.md) and
 
 This is a portfolio v0.1, not a production document platform.
 
-- The demo corpus is small (8 pages). The evaluation is designed to be honest, not exhaustive.
+- The demo corpus is small (17 pages). The evaluation is designed to be honest, not exhaustive.
 - The multilingual model needs about 2 GB of RAM; the free-tier deployment uses the lexical hash
   provider instead.
 - Answers are extractive and single-evidence; multi-hop and conversational answers are future work.
+- The hosted demo uses SQLite and an in-process scan; the PostgreSQL + pgvector/HNSW path is
+  implemented and CI-tested, but requires a pgvector-enabled PostgreSQL instance.
 - Ingestion is synchronous and text-PDF only. A background worker and OCR are next.
-- Vector scoring is an in-process scan; pgvector/HNSW is the production upgrade.
 - The public upload endpoint has no authentication or rate limiting; deploy it behind a demo gate.
 - The free Render blueprint uses ephemeral SQLite; a persistent PostgreSQL deployment is the
   production path and is CI-tested.
 
-Planned next steps: pgvector + Postgres, background ingestion jobs, an optional cited LLM answer
-provider, OCR for scanned manuals, a 50+ question evaluation set, and a persistent PostgreSQL
-deployment.
+Planned next steps: background ingestion jobs, an optional cited LLM answer provider, OCR for scanned
+manuals, a larger 100-question evaluation set, and a persistent pgvector deployment.
 
 ## Stack
 
 FastAPI · SQLAlchemy 2 · Alembic · Pydantic Settings · PyMuPDF · model2vec · rank-bm25 · NumPy ·
-Jinja2 + HTMX · pytest · Ruff · mypy · GitHub Actions
+PostgreSQL + pgvector (HNSW) · SQLite (local demo) · Jinja2 + HTMX · pytest · Ruff · mypy ·
+GitHub Actions
 
 ## License
 

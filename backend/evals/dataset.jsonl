@@ -1,8 +1,8 @@
 {"id": "q01", "question": "What is the maximum operating pressure of the H-200?", "document_title": "Hydraulic Press H-200 Service Manual", "page": 1, "answerable": true}
 {"id": "q02", "question": "What pressure should the H-200 never exceed?", "document_title": "Hydraulic Press H-200 Service Manual", "page": 1, "answerable": true}
 {"id": "q03", "question": "Which hydraulic oil does the press use?", "document_title": "Hydraulic Press H-200 Service Manual", "page": 1, "answerable": true}
-{"id": "q04", "question": "How often should the hydraulic oil be changed?", "document_title": "Hydraulic Press H-200 Service Manual", "page": 2, "answerable": true}
-{"id": "q05", "question": "When should the oil filter be replaced?", "document_title": "Hydraulic Press H-200 Service Manual", "page": 2, "answerable": true}
+{"id": "q04", "question": "How often should the H-200 hydraulic oil be changed?", "document_title": "Hydraulic Press H-200 Service Manual", "page": 2, "answerable": true}
+{"id": "q05", "question": "When should the H-200 oil filter be replaced?", "document_title": "Hydraulic Press H-200 Service Manual", "page": 2, "answerable": true}
 {"id": "q06", "question": "How frequently should the hoses be inspected?", "document_title": "Hydraulic Press H-200 Service Manual", "page": 2, "answerable": true}
 {"id": "q07", "question": "What should I check if the pressure drops below 120 bar?", "document_title": "Hydraulic Press H-200 Service Manual", "page": 3, "answerable": true}
 {"id": "q08", "question": "What causes an abnormal knocking noise?", "document_title": "Hydraulic Press H-200 Service Manual", "page": 3, "answerable": true}
@@ -11,7 +11,7 @@
 {"id": "q11", "question": "Which refrigerant does the CX-40 use?", "document_title": "HVAC CX-40 Service Manual", "page": 1, "answerable": true}
 {"id": "q12", "question": "What is the factory refrigerant charge?", "document_title": "HVAC CX-40 Service Manual", "page": 1, "answerable": true}
 {"id": "q13", "question": "What supply airflow does the CX-40 provide?", "document_title": "HVAC CX-40 Service Manual", "page": 1, "answerable": true}
-{"id": "q14", "question": "How often should the air filter be replaced?", "document_title": "HVAC CX-40 Service Manual", "page": 2, "answerable": true}
+{"id": "q14", "question": "How often should the CX-40 air filter be replaced?", "document_title": "HVAC CX-40 Service Manual", "page": 2, "answerable": true}
 {"id": "q15", "question": "What does error E1 mean?", "document_title": "HVAC CX-40 Service Manual", "page": 3, "answerable": true}
 {"id": "q16", "question": "How do I reset the HVAC unit?", "document_title": "HVAC CX-40 Service Manual", "page": 3, "answerable": true}
 {"id": "q17", "question": "At what voltage does the lockout procedure apply?", "document_title": "Lockout Tagout Procedure", "page": 1, "answerable": true}
@@ -21,6 +21,40 @@
 {"id": "q21", "question": "What must employees do before locking out equipment?", "document_title": "Lockout Tagout Procedure", "page": 2, "answerable": true}
 {"id": "q22", "question": "What is the phone number for technical support?", "document_title": null, "page": null, "answerable": false}
 {"id": "q23", "question": "Who won the 2024 World Cup?", "document_title": null, "page": null, "answerable": false}
-{"id": "q24", "question": "What is the recommended daily water intake?", "document_title": null, "page": null, "answerable": false}
+{"id": "q24", "question": "What is the recommended daily calorie intake for an adult?", "document_title": null, "page": null, "answerable": false}
 {"id": "q25", "question": "How do I reset my email password?", "document_title": null, "page": null, "answerable": false}
 {"id": "q26", "question": "What is the capital of France?", "document_title": null, "page": null, "answerable": false}
+{"id": "q27", "question": "What is the rated lifting capacity of the FL-30?", "document_title": "Forklift FL-30 Service Manual", "page": 1, "answerable": true}
+{"id": "q28", "question": "What is the traction battery voltage of the FL-30?", "document_title": "Forklift FL-30 Service Manual", "page": 1, "answerable": true}
+{"id": "q29", "question": "What is the maximum lift height?", "document_title": "Forklift FL-30 Service Manual", "page": 1, "answerable": true}
+{"id": "q30", "question": "What type of tires does the forklift use?", "document_title": "Forklift FL-30 Service Manual", "page": 1, "answerable": true}
+{"id": "q31", "question": "What must FL-30 operators wear?", "document_title": "Forklift FL-30 Service Manual", "page": 1, "answerable": true}
+{"id": "q32", "question": "How often should the battery water level be checked?", "document_title": "Forklift FL-30 Service Manual", "page": 2, "answerable": true}
+{"id": "q33", "question": "How often should the service brakes be inspected?", "document_title": "Forklift FL-30 Service Manual", "page": 2, "answerable": true}
+{"id": "q34", "question": "When should the FL-30 hydraulic oil be changed?", "document_title": "Forklift FL-30 Service Manual", "page": 2, "answerable": true}
+{"id": "q35", "question": "What does error E01 mean?", "document_title": "Forklift FL-30 Service Manual", "page": 3, "answerable": true}
+{"id": "q36", "question": "How do I lower the forks in an emergency?", "document_title": "Forklift FL-30 Service Manual", "page": 3, "answerable": true}
+{"id": "q37", "question": "What motor power does the AC-75 have?", "document_title": "Air Compressor AC-75 Service Manual", "page": 1, "answerable": true}
+{"id": "q38", "question": "What is the maximum discharge pressure?", "document_title": "Air Compressor AC-75 Service Manual", "page": 1, "answerable": true}
+{"id": "q39", "question": "What is the free air delivery of the AC-75?", "document_title": "Air Compressor AC-75 Service Manual", "page": 1, "answerable": true}
+{"id": "q40", "question": "Which compressor oil should I use?", "document_title": "Air Compressor AC-75 Service Manual", "page": 1, "answerable": true}
+{"id": "q41", "question": "How often should the compressor oil be changed?", "document_title": "Air Compressor AC-75 Service Manual", "page": 2, "answerable": true}
+{"id": "q42", "question": "When should the oil filter be replaced?", "document_title": "Air Compressor AC-75 Service Manual", "page": 2, "answerable": true}
+{"id": "q43", "question": "How often should I drain the AC-75 condensate?", "document_title": "Air Compressor AC-75 Service Manual", "page": 2, "answerable": true}
+{"id": "q44", "question": "What causes a high discharge temperature?", "document_title": "Air Compressor AC-75 Service Manual", "page": 3, "answerable": true}
+{"id": "q45", "question": "What causes a pressure drop in the AC-75?", "document_title": "Air Compressor AC-75 Service Manual", "page": 3, "answerable": true}
+{"id": "q46", "question": "How do I reset the compressor?", "document_title": "Air Compressor AC-75 Service Manual", "page": 3, "answerable": true}
+{"id": "q47", "question": "When is a confined space entry permit required?", "document_title": "Confined Space Entry Procedure", "page": 1, "answerable": true}
+{"id": "q48", "question": "What oxygen range is acceptable?", "document_title": "Confined Space Entry Procedure", "page": 1, "answerable": true}
+{"id": "q49", "question": "Which gases should be tested before entry?", "document_title": "Confined Space Entry Procedure", "page": 1, "answerable": true}
+{"id": "q50", "question": "Which PPE is required for confined space entry?", "document_title": "Confined Space Entry Procedure", "page": 1, "answerable": true}
+{"id": "q51", "question": "What must be done to energy sources before entry?", "document_title": "Confined Space Entry Procedure", "page": 2, "answerable": true}
+{"id": "q52", "question": "Who must remain outside the space during entry?", "document_title": "Confined Space Entry Procedure", "page": 2, "answerable": true}
+{"id": "q53", "question": "What rescue system is used if a worker collapses?", "document_title": "Confined Space Entry Procedure", "page": 2, "answerable": true}
+{"id": "q54", "question": "How long is the confined space entry permit kept after the work?", "document_title": "Confined Space Entry Procedure", "page": 3, "answerable": true}
+{"id": "q55", "question": "How often are entrants retrained?", "document_title": "Confined Space Entry Procedure", "page": 3, "answerable": true}
+{"id": "q56", "question": "What is the capital of Japan?", "document_title": null, "page": null, "answerable": false}
+{"id": "q57", "question": "How many moons does Jupiter have?", "document_title": null, "page": null, "answerable": false}
+{"id": "q58", "question": "Who wrote Hamlet?", "document_title": null, "page": null, "answerable": false}
+{"id": "q59", "question": "What is the recommended dose of ibuprofen?", "document_title": null, "page": null, "answerable": false}
+{"id": "q60", "question": "What is the stock price of Apple?", "document_title": null, "page": null, "answerable": false}

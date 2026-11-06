@@ -39,9 +39,10 @@ recreates the three demo manuals automatically. Answers and citations keep worki
 manuals and their original PDFs do not survive a restart.
 
 For a persistent demo, use a paid Render PostgreSQL instance or an external Postgres (Neon, Supabase,
-etc.) and set `DATABASE_URL` to its connection string. The app normalizes `postgres://` and
-`postgresql://` URLs to the `psycopg` driver. CI runs Alembic, seed, and the smoke evaluation against
-PostgreSQL on every push.
+etc.) with the **pgvector** extension available, and set `DATABASE_URL` to its connection string. The
+app normalizes `postgres://` and `postgresql://` URLs to the `psycopg` driver. The migration creates
+the vector extension, adds `embedding_vec vector(256)`, backfills it, and builds an HNSW cosine index.
+CI runs Alembic, seed, and the smoke evaluation against the `pgvector/pgvector` image on every push.
 
 ## Why the free tier uses the hash provider
 
@@ -115,8 +116,9 @@ of seconds. The container migrates and seeds on every start.
   deploy this publicly with sensitive manuals. Add authentication and rate limiting before real use.
 - **Schema changes:** the start command runs Alembic on every container boot. Keep migrations
   backward-compatible and test them against PostgreSQL before deploying.
-- **pgvector:** not required for the current corpus. The JSON embeddings + in-process cosine scan is
-  the v0.1 design. Moving to pgvector/HNSW is a scaling milestone.
+- **pgvector:** the PostgreSQL path uses `vector(256)` and an HNSW cosine index; the migration creates
+  the extension and backfills existing JSON embeddings. The free demo stays on SQLite, while CI uses
+  the `pgvector/pgvector` image to validate the native path.
 
 ## Local production check
 

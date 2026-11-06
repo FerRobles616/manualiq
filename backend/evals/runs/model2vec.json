@@ -1,18 +1,18 @@
 {
-  "timestamp": "2026-11-05T02:38:02.838484+00:00",
+  "timestamp": "2026-11-06T00:29:53.575986+00:00",
   "dataset": "evals/dataset.jsonl",
   "top_k": 5,
   "provider": "model2vec",
   "model": "minishlab/potion-multilingual-128M",
   "metrics": {
     "hit_at_k": 1.0,
-    "mrr": 0.9047619047619048,
+    "mrr": 0.8716666666666667,
     "citation_accuracy": 1.0,
     "refusal_accuracy": 1.0,
     "answer_rate": 1.0,
     "citation_support": 1.0,
-    "answered": 21,
-    "cases": 26
+    "answered": 50,
+    "cases": 60
   },
   "results": [
     {
@@ -33,7 +33,7 @@
       "refused": false,
       "citation_match": true,
       "citation_supported": true,
-      "answer": "Based on the loaded manuals:\n\n\u2022 The H-200 hydraulic press is designed for cold metal forming. [1]"
+      "answer": "Based on the loaded manuals:\n\n\u2022 The maximum operating pressure is 180 bar. [1]"
     },
     {
       "id": "q03",
@@ -47,7 +47,7 @@
     },
     {
       "id": "q04",
-      "question": "How often should the hydraulic oil be changed?",
+      "question": "How often should the H-200 hydraulic oil be changed?",
       "answerable": true,
       "gold_rank": 2,
       "refused": false,
@@ -57,9 +57,9 @@
     },
     {
       "id": "q05",
-      "question": "When should the oil filter be replaced?",
+      "question": "When should the H-200 oil filter be replaced?",
       "answerable": true,
-      "gold_rank": 1,
+      "gold_rank": 3,
       "refused": false,
       "citation_match": true,
       "citation_supported": true,
@@ -143,13 +143,13 @@
       "refused": false,
       "citation_match": true,
       "citation_supported": true,
-      "answer": "Based on the loaded manuals:\n\n\u2022 The CX-40 rooftop unit uses R-410A refrigerant. [1]"
+      "answer": "Based on the loaded manuals:\n\n\u2022 The supply airflow is 1200 CFM. [1]"
     },
     {
       "id": "q14",
-      "question": "How often should the air filter be replaced?",
+      "question": "How often should the CX-40 air filter be replaced?",
       "answerable": true,
-      "gold_rank": 1,
+      "gold_rank": 4,
       "refused": false,
       "citation_match": true,
       "citation_supported": true,
@@ -169,7 +169,7 @@
       "id": "q16",
       "question": "How do I reset the HVAC unit?",
       "answerable": true,
-      "gold_rank": 2,
+      "gold_rank": 3,
       "refused": false,
       "citation_match": true,
       "citation_supported": true,
@@ -209,7 +209,7 @@
       "id": "q20",
       "question": "How often is the lockout procedure inspected?",
       "answerable": true,
-      "gold_rank": 2,
+      "gold_rank": 1,
       "refused": false,
       "citation_match": true,
       "citation_supported": true,
@@ -219,7 +219,7 @@
       "id": "q21",
       "question": "What must employees do before locking out equipment?",
       "answerable": true,
-      "gold_rank": 2,
+      "gold_rank": 3,
       "refused": false,
       "citation_match": true,
       "citation_supported": true,
@@ -247,7 +247,7 @@
     },
     {
       "id": "q24",
-      "question": "What is the recommended daily water intake?",
+      "question": "What is the recommended daily calorie intake for an adult?",
       "answerable": false,
       "gold_rank": null,
       "refused": true,
@@ -268,6 +268,346 @@
     {
       "id": "q26",
       "question": "What is the capital of France?",
+      "answerable": false,
+      "gold_rank": null,
+      "refused": true,
+      "citation_match": false,
+      "citation_supported": true,
+      "answer": "I couldn't find enough evidence in the loaded manuals to answer that question."
+    },
+    {
+      "id": "q27",
+      "question": "What is the rated lifting capacity of the FL-30?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 The FL-30 forklift has a rated lifting capacity of 3000 kg. [1]"
+    },
+    {
+      "id": "q28",
+      "question": "What is the traction battery voltage of the FL-30?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 The traction battery is 48 V. [1]"
+    },
+    {
+      "id": "q29",
+      "question": "What is the maximum lift height?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 The maximum lift height is 6 meters. [1]"
+    },
+    {
+      "id": "q30",
+      "question": "What type of tires does the forklift use?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 The forklift uses solid pneumatic tires. [1]"
+    },
+    {
+      "id": "q31",
+      "question": "What must FL-30 operators wear?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Operators must wear a hard hat and a high-visibility vest. [1]"
+    },
+    {
+      "id": "q32",
+      "question": "How often should the battery water level be checked?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Check the battery water level every week. [1]"
+    },
+    {
+      "id": "q33",
+      "question": "How often should the service brakes be inspected?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Inspect the service brakes every 250 operating hours. [1]"
+    },
+    {
+      "id": "q34",
+      "question": "When should the FL-30 hydraulic oil be changed?",
+      "answerable": true,
+      "gold_rank": 4,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Change the hydraulic oil every 1000 operating hours. [1]"
+    },
+    {
+      "id": "q35",
+      "question": "What does error E01 mean?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 E01 means low battery voltage. [1]"
+    },
+    {
+      "id": "q36",
+      "question": "How do I lower the forks in an emergency?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 To lower the forks in an emergency, pull the emergency lowering valve. [1]"
+    },
+    {
+      "id": "q37",
+      "question": "What motor power does the AC-75 have?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 The AC-75 compressor has a 75 kW motor. [1]"
+    },
+    {
+      "id": "q38",
+      "question": "What is the maximum discharge pressure?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 The maximum discharge pressure is 10 bar. [1]"
+    },
+    {
+      "id": "q39",
+      "question": "What is the free air delivery of the AC-75?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 The free air delivery is 500 CFM. [1]"
+    },
+    {
+      "id": "q40",
+      "question": "Which compressor oil should I use?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Use ISO VG 46 compressor oil. [1]"
+    },
+    {
+      "id": "q41",
+      "question": "How often should the compressor oil be changed?",
+      "answerable": true,
+      "gold_rank": 2,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Change the compressor oil every 2000 operating hours. [1]"
+    },
+    {
+      "id": "q42",
+      "question": "When should the oil filter be replaced?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Replace the oil filter every 500 operating hours. [1]"
+    },
+    {
+      "id": "q43",
+      "question": "How often should I drain the AC-75 condensate?",
+      "answerable": true,
+      "gold_rank": 3,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Drain the condensate from the receiver tank daily. [1]"
+    },
+    {
+      "id": "q44",
+      "question": "What causes a high discharge temperature?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 High discharge temperature usually means a blocked oil cooler. [1]"
+    },
+    {
+      "id": "q45",
+      "question": "What causes a pressure drop in the AC-75?",
+      "answerable": true,
+      "gold_rank": 2,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 A pressure drop usually means a leak in the air line. [1]"
+    },
+    {
+      "id": "q46",
+      "question": "How do I reset the compressor?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 To reset the compressor, press the red reset button for five seconds. [1]"
+    },
+    {
+      "id": "q47",
+      "question": "When is a confined space entry permit required?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 A confined space entry permit is required before entry. [1]"
+    },
+    {
+      "id": "q48",
+      "question": "What oxygen range is acceptable?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 The acceptable oxygen range is 19.5% to 23.5%. [1]"
+    },
+    {
+      "id": "q49",
+      "question": "Which gases should be tested before entry?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Test for flammable gas and hydrogen sulfide before entry. [1]"
+    },
+    {
+      "id": "q50",
+      "question": "Which PPE is required for confined space entry?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 A confined space entry permit is required before entry. [1]"
+    },
+    {
+      "id": "q51",
+      "question": "What must be done to energy sources before entry?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Isolate and lock out all energy sources before entry. [1]"
+    },
+    {
+      "id": "q52",
+      "question": "Who must remain outside the space during entry?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 A standby attendant must remain outside the space during entry. [1]"
+    },
+    {
+      "id": "q53",
+      "question": "What rescue system is used if a worker collapses?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 If a worker collapses, call emergency services and use the tripod rescue system. [1]"
+    },
+    {
+      "id": "q54",
+      "question": "How long is the confined space entry permit kept after the work?",
+      "answerable": true,
+      "gold_rank": 4,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Keep the entry permit for one year after the work. [1]"
+    },
+    {
+      "id": "q55",
+      "question": "How often are entrants retrained?",
+      "answerable": true,
+      "gold_rank": 1,
+      "refused": false,
+      "citation_match": true,
+      "citation_supported": true,
+      "answer": "Based on the loaded manuals:\n\n\u2022 Retrain entrants and attendants every year. [1]"
+    },
+    {
+      "id": "q56",
+      "question": "What is the capital of Japan?",
+      "answerable": false,
+      "gold_rank": null,
+      "refused": true,
+      "citation_match": false,
+      "citation_supported": true,
+      "answer": "I couldn't find enough evidence in the loaded manuals to answer that question."
+    },
+    {
+      "id": "q57",
+      "question": "How many moons does Jupiter have?",
+      "answerable": false,
+      "gold_rank": null,
+      "refused": true,
+      "citation_match": false,
+      "citation_supported": true,
+      "answer": "I couldn't find enough evidence in the loaded manuals to answer that question."
+    },
+    {
+      "id": "q58",
+      "question": "Who wrote Hamlet?",
+      "answerable": false,
+      "gold_rank": null,
+      "refused": true,
+      "citation_match": false,
+      "citation_supported": true,
+      "answer": "I couldn't find enough evidence in the loaded manuals to answer that question."
+    },
+    {
+      "id": "q59",
+      "question": "What is the recommended dose of ibuprofen?",
+      "answerable": false,
+      "gold_rank": null,
+      "refused": true,
+      "citation_match": false,
+      "citation_supported": true,
+      "answer": "I couldn't find enough evidence in the loaded manuals to answer that question."
+    },
+    {
+      "id": "q60",
+      "question": "What is the stock price of Apple?",
       "answerable": false,
       "gold_rank": null,
       "refused": true,

@@ -22,13 +22,13 @@ flowchart TB
         Upload --> Extract[PyMuPDF block extraction]
         Extract --> Chunker[Page-aware chunker]
         Chunker --> Embedder[Embedding provider]
-        Embedder --> ChunkRows[(chunks.embedding JSON)]
+        Embedder --> ChunkRows[(chunks.embedding JSON / pgvector)]
     end
 
     subgraph Query
         Question[Question] --> QueryVector[Query embedding]
-        ChunkRows --> BM25[BM25 index]
-        QueryVector --> Cosine[Cosine scores]
+        ChunkRows --> BM25[BM25 or PostgreSQL FTS]
+        QueryVector --> Cosine[Cosine or pgvector HNSW]
         BM25 --> Fusion[Adaptive weighted RRF]
         Cosine --> Fusion
         Fusion --> Answerer[Evidence guard + sentence selector]
@@ -63,15 +63,17 @@ service and keeps the API usable on its own.
 `chunks`:
 
 - `id` (UUID), `document_id`, `page`, `chunk_index`, `content`, `token_count`
-- `embedding` as a JSON array of floats
+- `embedding` as a JSON array of floats (both databases)
+- `embedding_vec` as `vector(256)` on PostgreSQL, populated from the JSON embedding and indexed with
+  HNSW cosine distance
 - `created_at`
 
 The content hash makes uploads idempotent: uploading the same PDF twice returns the existing document.
 
-SQLite is the default. SQLAlchemy and Alembic keep the schema portable to PostgreSQL. The current
-vector search is an in-process NumPy scan over JSON arrays; it is appropriate for a small demo corpus.
-For tens of thousands of chunks, move embeddings to `pgvector` with an HNSW index and change the
-retrieval query to an indexed `<=>` search.
+SQLite is the default for the local demo. On SQLite, vector search is an in-process NumPy scan over
+the JSON arrays. On PostgreSQL, the app uses the native pgvector column and an HNSW index; the
+migration creates the extension, backfills `embedding_vec`, and builds the index. The PostgreSQL path
+is exercised by CI with the `pgvector/pgvector` image.
 
 ### Ingestion pipeline
 
@@ -81,7 +83,8 @@ retrieval query to an indexed `<=>` search.
    joined, so wrapped sentences stay intact; blocks remain separated by blank lines.
 4. Split each page into chunks of at most `CHUNK_SIZE` characters with `CHUNK_OVERLAP` characters of
    overlap. The chunk keeps its 1-based page number.
-5. Embed all chunks in batches of 32. Store one row per chunk.
+5. Embed all chunks in batches of 32. Store one row per chunk. On PostgreSQL, also write the native
+   `embedding_vec` column used by the HNSW index.
 6. Mark the document `ready` with page count and chunk count, or `failed` with the error.
 
 The extraction step is layout-aware rather than a full document-layout model: it preserves paragraph
@@ -92,20 +95,27 @@ hierarchical section tree yet.
 
 For a question `q` and corpus chunks `c_i`:
 
-1. **Vector ranking.** Embed `q` with the same provider used at ingestion. L2-normalize query and
-   chunk vectors, then compute cosine similarity `s_i = q · c_i`. Negative and zero scores are
-   excluded from the ranking.
-2. **Lexical ranking.** Tokenize with lowercase Unicode words, remove English/Spanish stopwords, and
-   build a `BM25Okapi` index. Positive BM25 scores form the second ranking.
+1. **Vector ranking.** Embed `q` with the same provider used at ingestion.
+   - **SQLite:** L2-normalize query and JSON chunk vectors, then compute cosine similarity
+     `s_i = q · c_i` in process. Negative and zero scores are excluded.
+   - **PostgreSQL:** query `1 - (embedding_vec <=> query_vector)` with pgvector; an HNSW cosine index
+     orders the candidates.
+2. **Lexical ranking.**
+   - **SQLite:** tokenize with lowercase Unicode words, remove English/Spanish stopwords, and build a
+     `BM25Okapi` index.
+   - **PostgreSQL:** use `to_tsvector`/`plainto_tsquery` and `ts_rank_cd`; the language is configurable
+     with `FTS_LANGUAGE`.
+   Positive scores form the second ranking in both paths.
 3. **Adaptive weighted RRF.** With rank constant `k = 60`:
 
    ```text
    score(c) = Σ  weight_r / (k + rank_r(c) + 1)
    ```
 
-   When BM25 has any positive score, `weight_bm25 = 1.0` and `weight_vector = 0.7`. When BM25 has no
-   signal, only the vector ranking contributes (`weight_vector = 1.0`). This gives exact part
-   numbers, error codes, units, and interval terms a stronger voice without losing paraphrases.
+   When the lexical ranking has any positive score, `weight_lexical = 1.0` and `weight_vector = 0.7`.
+   When lexical search has no signal, only the vector ranking contributes (`weight_vector = 1.0`).
+   This gives exact part numbers, error codes, units, and interval terms a stronger voice without
+   losing paraphrases.
 4. **Sentence selection.** Consider the top three fused chunks. For each chunk:
    - reject chunks below `MIN_SIMILARITY`;
    - extract sentences (sentence punctuation or block boundaries);
@@ -135,16 +145,17 @@ and computes:
 - refusal accuracy from answerable/unanswerable labels;
 - citation support by checking each quote is a substring of the cited chunk.
 
-The full run uses the multilingual model. CI uses the deterministic hash provider and a smaller smoke
-set with explicit thresholds. The evaluation report is written to `evals/runs/` as JSON.
+The full run uses the multilingual model on SQLite. CI uses the deterministic hash provider and a
+smaller smoke set against PostgreSQL/pgvector with explicit thresholds. The evaluation report is
+written to `evals/runs/` as JSON.
 
 ## Failure modes and trade-offs
 
 - **One page is one chunk in the demo corpus.** This keeps citations easy to validate, but a dense
   page could contain many facts and retrieval competes at page granularity. Production should chunk
   by section and keep page metadata.
-- **In-process vector scan.** O(n) per query and memory proportional to the corpus. Fine below a few
-  thousand chunks; replace with pgvector/HNSW beyond that.
+- **SQLite in-process scan.** O(n) per query and memory proportional to the corpus on SQLite. The
+  PostgreSQL path uses pgvector/HNSW and is the scaling path; the free demo stays on SQLite.
 - **Extractive answers.** High faithfulness, limited fluency and no multi-sentence synthesis. An LLM
   can be added later only if it returns structured citations that pass the same support checks.
 - **Synchronous ingestion.** Small PDFs index in seconds; a queue/worker is needed for large uploads
@@ -155,9 +166,9 @@ set with explicit thresholds. The evaluation report is written to `evals/runs/` 
 
 ## Scaling path
 
-1. Move `embedding` to `pgvector` (`vector(256)`) with an HNSW cosine index; keep the BM25 side in
-   PostgreSQL full-text search or a dedicated search service.
+1. Benchmark pgvector/HNSW against the SQLite scan on a larger corpus and tune HNSW parameters.
 2. Add a durable ingestion worker and a `jobs` table with claim semantics.
 3. Add section-aware chunking and document metadata (revision, equipment, language).
-4. Add an optional LLM answer provider with a strict citation/refusal contract and the same eval gates.
-5. Add OCR, auth, rate limiting, and a persistent hosted deployment.
+4. Expand the gold set beyond 60 cases and add a human review pass.
+5. Add an optional LLM answer provider with a strict citation/refusal contract and the same eval gates.
+6. Add OCR, auth, rate limiting, and a persistent hosted deployment.
