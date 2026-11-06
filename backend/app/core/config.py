@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     chunk_overlap: int = 150
     top_k: int = 5
     min_similarity: float = 0.30
+    fts_language: Literal["english", "spanish", "simple"] = "english"
 
     upload_dir: str = "./data/uploads"
     corpus_dir: str = "./data/corpus"

@@ -1,11 +1,12 @@
 import hashlib
+import json
 import re
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 
 import pymupdf
-from sqlalchemy import select
+from sqlalchemy import select, text
 from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
@@ -106,6 +107,7 @@ def ingest_pdf_bytes(
         if not pending:
             raise IngestionError("No chunks could be created from the PDF")
 
+        created_chunks: list[Chunk] = []
         batch_size = 32
         for start in range(0, len(pending), batch_size):
             batch = pending[start : start + batch_size]
@@ -114,15 +116,32 @@ def ingest_pdf_bytes(
                 raise IngestionError("Embedding provider returned an invalid shape")
 
             for (page_number, index, content), vector in zip(batch, vectors, strict=True):
-                db.add(
-                    Chunk(
-                        document_id=document.id,
-                        page=page_number,
-                        chunk_index=index,
-                        content=content,
-                        token_count=len(tokenize(content)),
-                        embedding=[float(value) for value in vector],
-                    )
+                chunk = Chunk(
+                    document_id=document.id,
+                    page=page_number,
+                    chunk_index=index,
+                    content=content,
+                    token_count=len(tokenize(content)),
+                    embedding=[float(value) for value in vector],
+                )
+                db.add(chunk)
+                created_chunks.append(chunk)
+
+        # PostgreSQL uses a native pgvector column for the HNSW index. SQLite
+        # keeps the JSON embedding and performs cosine search in process.
+        db.flush()
+        if db.get_bind().dialect.name == "postgresql":
+            for chunk in created_chunks:
+                db.execute(
+                    text(
+                        "UPDATE chunks "
+                        "SET embedding_vec = CAST(:embedding AS vector) "
+                        "WHERE id = :chunk_id"
+                    ),
+                    {
+                        "embedding": json.dumps(chunk.embedding),
+                        "chunk_id": chunk.id,
+                    },
                 )
 
         document.page_count = page_count
